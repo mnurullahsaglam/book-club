@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Book::class)->constrained()->cascadeOnDelete();
 
-            $table->unsignedInteger('rating')->default(1);
+            $table->unsignedInteger('rating')->nullable();
             $table->text('comment')->nullable();
 
             $table->timestamps();

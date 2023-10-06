@@ -22,6 +22,7 @@ return new class extends Migration
             $table->date('registered_at')->nullable();
 
             $table->boolean('is_active')->default(true);
+            $table->boolean('is_admin')->default(false);
 
             $table->rememberToken();
 

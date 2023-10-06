@@ -2,32 +2,43 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ReviewResource\Pages;
+use App\Filament\Resources\ReviewResource\Pages\EditReview;
+use App\Filament\Resources\ReviewResource\Pages\ListReviews;
 use App\Filament\Resources\ReviewResource\RelationManagers;
 use App\Models\Review;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use IbrahimBougaoua\FilamentRatingStar\Actions\RatingStar;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use IbrahimBougaoua\FilamentRatingStar\Columns\RatingStarColumn;
 
 class ReviewResource extends Resource
 {
     protected static ?string $model = Review::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-star';
+
+    protected static ?string $slug = 'reviews';
+
+    protected static ?string $modelLabel = 'Yorum';
+
+    protected static ?string $pluralLabel = 'Yorumlar';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('user_id')
+                Select::make('user_id')
                     ->relationship('user', 'name')
                     ->required(),
-                Forms\Components\Select::make('book_id')
+
+                Select::make('book_id')
                     ->relationship('book', 'name')
                     ->required(),
 
@@ -44,33 +55,25 @@ class ReviewResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user.name')
+                TextColumn::make('book.name')
+                    ->label('Kitap')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('book.name')
-                    ->numeric()
+
+                RatingStarColumn::make('rating')
+                    ->label('Puan')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('rating')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                EditAction::make()
+                    ->visible(fn(Review $review) => $review->user_id === auth()->id()),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -85,9 +88,13 @@ class ReviewResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListReviews::route('/'),
-            'create' => Pages\CreateReview::route('/create'),
-            'edit' => Pages\EditReview::route('/{record}/edit'),
+            'index' => ListReviews::route('/'),
+            'edit' => EditReview::route('/{record}/edit'),
         ];
+    }
+
+    public static function canCreate(): bool
+    {
+        return false;
     }
 }

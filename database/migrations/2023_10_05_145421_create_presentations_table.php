@@ -21,7 +21,7 @@ return new class extends Migration
 
             $table->string('title');
             $table->string('file');
-            $table->string('description');
+            $table->text('description')->nullable();
 
             $table->timestamps();
         });

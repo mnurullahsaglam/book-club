@@ -3,6 +3,10 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\MeetingResource\Pages;
+use App\Filament\Resources\MeetingResource\Pages\CreateMeeting;
+use App\Filament\Resources\MeetingResource\Pages\EditMeeting;
+use App\Filament\Resources\MeetingResource\Pages\ListMeetings;
+use App\Filament\Resources\MeetingResource\RelationManagers\PresentationsRelationManager;
 use App\Models\Meeting;
 use App\Models\User;
 use Filament\Forms\Components\CheckboxList;
@@ -14,6 +18,10 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -135,11 +143,12 @@ class MeetingResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                EditAction::make(),
+                DeleteAction::make()
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -147,16 +156,16 @@ class MeetingResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            PresentationsRelationManager::class,
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListMeetings::route('/'),
-            'create' => Pages\CreateMeeting::route('/create'),
-            'edit' => Pages\EditMeeting::route('/{record}/edit'),
+            'index' => ListMeetings::route('/'),
+            'create' => CreateMeeting::route('/create'),
+            'edit' => EditMeeting::route('/{record}/edit'),
         ];
     }
 }

@@ -25,6 +25,7 @@ class Meeting extends Model
 
     protected $casts = [
         'guests' => 'array',
+        'topics' => 'array',
         'decisions' => 'array',
     ];
 

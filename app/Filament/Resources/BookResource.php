@@ -5,18 +5,26 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\BookResource\Pages\CreateBook;
 use App\Filament\Resources\BookResource\Pages\EditBook;
 use App\Filament\Resources\BookResource\Pages\ListBooks;
-use App\Filament\Resources\BookResource\RelationManagers;
+use App\Filament\Resources\BookResource\Pages\ViewBook;
 use App\Models\Book;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\Group;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
 class BookResource extends Resource
@@ -39,32 +47,47 @@ class BookResource extends Resource
             ->schema([
                 Select::make('writer_id')
                     ->relationship('writer', 'name')
+                    ->label('Yazar')
                     ->required()
                     ->createOptionForm([
                         TextInput::make('name')
-                            ->required(),
+                            ->label('İsim')
+                            ->required()
+                            ->autofocus()
+                            ->autocapitalize(),
                     ]),
 
                 Select::make('publisher_id')
                     ->relationship('publisher', 'name')
+                    ->label('Yayınevi')
                     ->required()
                     ->createOptionForm([
                         TextInput::make('name')
-                            ->required(),
+                            ->label('İsim')
+                            ->required()
+                            ->autofocus()
+                            ->autocapitalize(),
                     ]),
 
                 TextInput::make('name')
+                    ->label('Kitap İsmi')
                     ->required()
                     ->maxLength(255),
 
                 TextInput::make('page_count')
+                    ->label('Sayfa Sayısı')
                     ->numeric()
                     ->minValue(0),
 
                 FileUpload::make('image')
+                    ->label('Kapak Resmi')
                     ->image()
                     ->directory('books')
                     ->columnSpanFull(),
+
+                Toggle::make('is_finished')
+                    ->label('Okundu mu?')
+                    ->default(false),
             ]);
     }
 
@@ -86,15 +109,21 @@ class BookResource extends Resource
                     ->numeric()
                     ->sortable(),
 
-                TextColumn::make('page_count')
-                    ->label('Sayfa Sayısı')
+                TextColumn::make('reviews_avg_rating')
+                    ->avg('reviews', 'rating')
+                    ->label('Ortalama Puan')
                     ->numeric()
                     ->searchable(),
+
+                ToggleColumn::make('is_finished')
+                    ->label('Okundu mu?')
+                    ->sortable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
+                ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make()
             ])
@@ -103,6 +132,47 @@ class BookResource extends Resource
                     DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Group::make([
+                    Section::make([
+                        TextEntry::make('name')
+                            ->label('Kitap')
+                            ->columnSpan(2),
+
+                        TextEntry::make('writer.name')
+                            ->label('Yazar')
+                            ->columnSpan(2),
+
+                        TextEntry::make('publisher.name')
+                            ->label('Yayınevi')
+                            ->columnSpan(2),
+
+                        TextEntry::make('page_count')
+                            ->label('Sayfa Sayısı')
+                            ->columnSpan(3),
+
+                        TextEntry::make('reviews_avg_rating')
+                            ->label('Ortalama Puan')
+                            ->columnSpan(3),
+                    ])
+                        ->columns(6),
+                ])
+                    ->columnSpan(2),
+
+                Group::make([
+                    Section::make([
+                        ImageEntry::make('image')
+                            ->label('Kapak Resmi')
+                    ])
+                ])
+                    ->columnSpan(1)
+            ])
+            ->columns(3);
     }
 
     public static function getRelations(): array
@@ -118,6 +188,7 @@ class BookResource extends Resource
             'index' => ListBooks::route('/'),
             'create' => CreateBook::route('/create'),
             'edit' => EditBook::route('/{record}/edit'),
+            'view' => ViewBook::route('/{record}'),
         ];
     }
 }

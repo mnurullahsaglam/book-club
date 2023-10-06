@@ -22,9 +22,9 @@ return new class extends Migration
             $table->date('date');
             $table->string('location');
 
-            $table->json('guests');
-            $table->json('topics');
-            $table->json('decisions');
+            $table->json('guests')->nullable();
+            $table->json('topics')->nullable();
+            $table->json('decisions')->nullable();
 
             $table->timestamps();
         });

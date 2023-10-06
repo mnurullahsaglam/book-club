@@ -16,29 +16,30 @@ class UserSeeder extends Seeder
             'name' => 'Mehmet Nurullah Sağlam',
             'email' => 'nurullahsl87@gmail.com',
             'password' => bcrypt('password'),
+            'is_admin' => true,
         ]);
 
         User::create([
             'name' => 'Ömer Faruk Maden',
-            'email' => 'ofaruk.maden@kitap.com',
+            'email' => 'o.farukmaden@gmail.com',
             'password' => bcrypt('password'),
         ]);
 
         User::create([
             'name' => 'Oktay Kaymak',
-            'email' => 'oktay.kaymak@kitap.com',
+            'email' => 'oktaykaymak02@gmail.com',
             'password' => bcrypt('password'),
         ]);
 
         User::create([
             'name' => 'Talha Saraç',
-            'email' => 'talha.sarac@kitap.com',
+            'email' => 'talhasaracc@gmail.com',
             'password' => bcrypt('password'),
         ]);
 
         User::create([
             'name' => 'Muhsin Hasib Başpehlivan',
-            'email' => 'mhasip.baspehlivan@kitap.com',
+            'email' => 'muhsinbaspehlivan@hotmail.com',
             'password' => bcrypt('password'),
         ]);
 
