@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\MeetingResource\Pages;
 use App\Filament\Resources\MeetingResource\Pages\CreateMeeting;
 use App\Filament\Resources\MeetingResource\Pages\EditMeeting;
 use App\Filament\Resources\MeetingResource\Pages\ListMeetings;
@@ -11,19 +10,22 @@ use App\Models\Meeting;
 use App\Models\User;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class MeetingResource extends Resource
 {
@@ -46,16 +48,16 @@ class MeetingResource extends Resource
                 Select::make('book_id')
                     ->label('Kitap')
                     ->relationship('book', 'name')
-                    ->required(),
+                    ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->writer->name} - {$record->name}")
+                    ->required()
+                    ->live()
+                    ->afterStateUpdated(fn(Set $set, ?string $state) => $set('order', Meeting::where('book_id', $state)->max('order') + 1)),
 
                 TextInput::make('order')
                     ->label('Sıra')
                     ->required()
                     ->numeric()
-                    ->minValue(1)
-                    ->default(function () {
-                        return Meeting::max('order') + 1;
-                    }),
+                    ->minValue(1),
 
                 TextInput::make('title')
                     ->label('Başlık')
@@ -100,12 +102,11 @@ class MeetingResource extends Resource
 
                 Section::make('Katılımcılar')
                     ->schema([
-                        CheckboxList::make('participants')
+                        CheckboxList::make('users')
                             ->label('Katılımcılar')
-                            ->options(User::active()
-                                ->pluck('name', 'id')
-                                ->toArray())
-                            ->bulkToggleable(),
+                            ->relationship('users', 'name', fn(Builder $query) => $query->active())
+                            ->bulkToggleable()
+                            ->live(),
 
                         Repeater::make('guests')
                             ->label('Konuklar')

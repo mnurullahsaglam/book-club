@@ -17,6 +17,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use IbrahimBougaoua\FilamentRatingStar\Actions\RatingStar;
 use IbrahimBougaoua\FilamentRatingStar\Columns\RatingStarColumn;
+use Illuminate\Database\Eloquent\Builder;
 
 class ReviewResource extends Resource
 {
@@ -26,9 +27,9 @@ class ReviewResource extends Resource
 
     protected static ?string $slug = 'reviews';
 
-    protected static ?string $modelLabel = 'Yorum';
+    protected static ?string $modelLabel = 'Değerlendirme';
 
-    protected static ?string $pluralLabel = 'Yorumlar';
+    protected static ?string $pluralLabel = 'Değerlendirmeler';
 
     public static function form(Form $form): Form
     {
@@ -54,6 +55,7 @@ class ReviewResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query) => $query->where('user_id', auth()->id()))
             ->columns([
                 TextColumn::make('book.name')
                     ->label('Kitap')

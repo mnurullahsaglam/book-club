@@ -36,6 +36,8 @@ class PresentationResource extends Resource
 
     protected static ?string $pluralLabel = 'Sunumlar';
 
+    protected static bool $shouldRegisterNavigation = false;
+
     public static function form(Form $form): Form
     {
         return $form

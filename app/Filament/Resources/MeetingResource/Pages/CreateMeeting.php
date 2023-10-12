@@ -9,7 +9,5 @@ use Filament\Resources\Pages\CreateRecord;
 
 class CreateMeeting extends CreateRecord
 {
-    use FilamentRedirect;
-
     protected static string $resource = MeetingResource::class;
 }

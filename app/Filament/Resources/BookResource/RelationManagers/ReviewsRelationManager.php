@@ -40,20 +40,12 @@ class ReviewsRelationManager extends RelationManager
                     ->numeric()
                     ->sortable(),
 
-                TextColumn::make('book.name')
-                    ->label('Kitap')
-                    ->numeric()
-                    ->sortable(),
-
                 RatingStarColumn::make('rating')
                     ->label('Puan')
                     ->sortable(),
 
                 TextColumn::make('comment')
                     ->label('Yorum'),
-            ])
-            ->filters([
-                //
             ]);
     }
 }
