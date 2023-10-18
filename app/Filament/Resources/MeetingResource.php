@@ -5,23 +5,30 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\MeetingResource\Pages\CreateMeeting;
 use App\Filament\Resources\MeetingResource\Pages\EditMeeting;
 use App\Filament\Resources\MeetingResource\Pages\ListMeetings;
+use App\Filament\Resources\MeetingResource\Pages\ViewMeeting;
 use App\Filament\Resources\MeetingResource\RelationManagers\PresentationsRelationManager;
 use App\Models\Meeting;
-use App\Models\User;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
+use Filament\Infolists\Components\Group;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\TextEntry\TextEntrySize;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -77,27 +84,11 @@ class MeetingResource extends Resource
 
                 Section::make('Gündem Maddeleri ve Kararlar')
                     ->schema([
-                        Repeater::make('topics')
-                            ->label('Gündem Maddeleri')
-                            ->schema([
-                                TextInput::make('topic')
-                                    ->label('Madde')
-                                    ->required()
-                                    ->maxLength(255),
-                            ])
-                            ->addActionLabel('Gündem maddesi ekle')
-                            ->defaultItems(0),
+                        RichEditor::make('topics')
+                            ->label('Gündem Maddeleri'),
 
-                        Repeater::make('decisions')
-                            ->label('Kararlar')
-                            ->schema([
-                                TextInput::make('decision')
-                                    ->label('Karar')
-                                    ->required()
-                                    ->maxLength(255),
-                            ])
-                            ->addActionLabel('Karar ekle')
-                            ->defaultItems(0)
+                        RichEditor::make('decisions')
+                            ->label('Kararlar'),
                     ]),
 
                 Section::make('Katılımcılar')
@@ -144,6 +135,7 @@ class MeetingResource extends Resource
                 //
             ])
             ->actions([
+                ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make()
             ])
@@ -152,6 +144,81 @@ class MeetingResource extends Resource
                     DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Group::make([
+                    \Filament\Infolists\Components\Section::make([
+                        Group::make([
+                            TextEntry::make('order')
+                                ->size(TextEntrySize::Large)
+                                ->weight(FontWeight::Black)
+                                ->hiddenLabel()
+                                ->formatStateUsing(fn(string $state, Meeting $record) => $state . '. ' . $record->title)
+                                ->columnSpan(3),
+
+                            TextEntry::make('date')
+                                ->hiddenLabel()
+                                ->columnSpan(1)
+                                ->alignRight(),
+
+                            TextEntry::make('location')
+                                ->label('Mekân: ')
+                                ->inlineLabel()
+                                ->columnSpanFull(),
+
+                            TextEntry::make('users.name')
+                                ->label('Katılımcılar')
+                                ->listWithLineBreaks()
+                                ->bulleted()
+                                ->columnSpanFull(),
+
+                            TextEntry::make('guests')
+                                ->label('Misafirler')
+                                ->listWithLineBreaks()
+                                ->bulleted()
+                                ->columnSpanFull()
+                                ->visible(fn(Meeting $record) => $record->guests),
+
+                            TextEntry::make('topics')
+                                ->label('Gündem Maddeleri')
+                                ->html()
+                                ->columnSpanFull(),
+
+                            TextEntry::make('decisions')
+                                ->label('Kararlar')
+                                ->html()
+                                ->columnSpanFull(),
+                        ])
+                            ->columns(4)
+                    ]),
+                ])
+                    ->columnSpan(2),
+
+                Group::make([
+                    \Filament\Infolists\Components\Section::make([
+                        ImageEntry::make('book.image')
+                            ->hiddenLabel(),
+
+                        TextEntry::make('book.name')
+                            ->hiddenLabel(),
+
+                        TextEntry::make('book.writer.name')
+                            ->hiddenLabel(),
+
+                        TextEntry::make('book.publisher.name')
+                            ->hiddenLabel(),
+
+                    ])
+                        ->columnSpanFull()
+                        ->heading('Kitap Bilgileri'),
+                ])
+                    ->columnSpan(1)
+            ])
+            ->columns(3);
     }
 
     public static function getRelations(): array
@@ -166,6 +233,7 @@ class MeetingResource extends Resource
         return [
             'index' => ListMeetings::route('/'),
             'create' => CreateMeeting::route('/create'),
+            'view' => ViewMeeting::route('/{record}'),
             'edit' => EditMeeting::route('/{record}/edit'),
         ];
     }

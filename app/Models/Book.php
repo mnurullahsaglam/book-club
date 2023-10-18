@@ -22,6 +22,8 @@ class Book extends Model
         'slug',
         'page_count',
         'is_finished',
+        'publication_date',
+        'publication_location',
     ];
 
     protected $casts = [

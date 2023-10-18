@@ -79,6 +79,15 @@ class BookResource extends Resource
                     ->numeric()
                     ->minValue(0),
 
+                TextInput::make('publication_location')
+                    ->label('Basım Yeri')
+                    ->maxLength(255),
+
+                TextInput::make('publication_date')
+                    ->label('Basım Yılı')
+                    ->numeric()
+                    ->minValue(0),
+
                 FileUpload::make('image')
                     ->label('Kapak Resmi')
                     ->image()
@@ -162,17 +171,18 @@ class BookResource extends Resource
                     ])
                         ->columns(6),
                 ])
-                    ->columnSpan(2),
+                    ->columnSpan(3),
 
                 Group::make([
                     Section::make([
                         ImageEntry::make('image')
                             ->label('Kapak Resmi')
+                            ->columnSpanFull()
                     ])
                 ])
                     ->columnSpan(1)
             ])
-            ->columns(3);
+            ->columns(4);
     }
 
     public static function getRelations(): array

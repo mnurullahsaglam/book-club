@@ -23,6 +23,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->unsignedInteger('page_count')->nullable();
+            $table->unsignedInteger('publication_date')->nullable();
+            $table->string('publication_location')->nullable();
             $table->boolean('is_finished')->default(false);
 
             $table->timestamps();

@@ -21,10 +21,10 @@ return new class extends Migration
             $table->string('title');
             $table->date('date');
             $table->string('location');
+            $table->longText('topics')->nullable();
+            $table->longText('decisions')->nullable();
 
             $table->json('guests')->nullable();
-            $table->json('topics')->nullable();
-            $table->json('decisions')->nullable();
 
             $table->timestamps();
         });
