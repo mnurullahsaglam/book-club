@@ -17,7 +17,6 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Storage;
 
 class PresentationsRelationManager extends RelationManager
 {
@@ -52,6 +51,7 @@ class PresentationsRelationManager extends RelationManager
                     ->label('Dosya')
                     ->required()
                     ->directory('presentations')
+                    ->disk('public')
                     ->columnSpanFull(),
 
                 RichEditor::make('description')
@@ -89,7 +89,8 @@ class PresentationsRelationManager extends RelationManager
                     ->label('Dosyayı görüntüle')
                     ->icon('heroicon-o-eye')
                     ->color('info')
-                    ->url(fn($record) => Storage::url($record->file), true),
+                    ->url(fn($record) => $record->file_url)
+                    ->openUrlInNewTab(),
                 EditAction::make(),
                 DeleteAction::make(),
             ])

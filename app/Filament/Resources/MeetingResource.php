@@ -181,17 +181,20 @@ class MeetingResource extends Resource
                                 ->listWithLineBreaks()
                                 ->bulleted()
                                 ->columnSpanFull()
+                                ->formatStateUsing(fn(array $state) => implode(', ', $state))
                                 ->visible(fn(Meeting $record) => $record->guests),
 
                             TextEntry::make('topics')
                                 ->label('Gündem Maddeleri')
                                 ->html()
-                                ->columnSpanFull(),
+                                ->columnSpanFull()
+                                ->visible(fn(Meeting $record) => $record->topics),
 
                             TextEntry::make('decisions')
                                 ->label('Kararlar')
                                 ->html()
-                                ->columnSpanFull(),
+                                ->columnSpanFull()
+                                ->visible(fn(Meeting $record) => $record->decisions),
                         ])
                             ->columns(4)
                     ]),
