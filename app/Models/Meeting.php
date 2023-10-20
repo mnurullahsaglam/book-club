@@ -25,6 +25,7 @@ class Meeting extends Model
 
     protected $casts = [
         'guests' => 'array',
+        'date' => 'date',
     ];
 
     public function book(): BelongsTo

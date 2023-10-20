@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Filament\Notifications\Actions\Action;
+use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -32,7 +34,37 @@ class Presentation extends Model
     public function fileUrl(): Attribute
     {
         return Attribute::make(
-            get: fn () => asset('uploads/' . $this->file),
+            get: fn() => asset('uploads/' . $this->file),
         );
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function (Presentation $presentation) {
+            $user = User::find($presentation->user_id);
+
+            // 12.10.2023 tarihindeki toplantı için sunumunuz sisteme yüklendi. İncelemek için tıklayınız[link].
+
+            $notificationText = "{$presentation->meeting->date->format('d.m.Y')} tarihindeki toplantı için sunumunuz sisteme yüklendi.";
+
+            $user->notify(
+                Notification::make()
+                    ->title('Yeni Sunum Yüklendi')
+                    ->body($notificationText)
+                    ->icon('heroicon-o-document-check')
+                    ->iconColor('info')
+                    ->actions([
+                        Action::make('view')
+                            ->label('Görüntüle')
+                            ->button()
+                            ->url($presentation->file_url)
+                            ->openUrlInNewTab()
+                            ->markAsRead(),
+                    ])
+                    ->toDatabase()
+            );
+        });
     }
 }
