@@ -45,9 +45,7 @@ class Presentation extends Model
         static::created(function (Presentation $presentation) {
             $user = User::find($presentation->user_id);
 
-            // 12.10.2023 tarihindeki toplantı için sunumunuz sisteme yüklendi. İncelemek için tıklayınız[link].
-
-            $notificationText = "{$presentation->meeting->date->format('d.m.Y')} tarihindeki toplantı için sunumunuz sisteme yüklendi.";
+            $notificationText = "{$presentation->meeting->date->format('d/m/Y')} tarihindeki toplantı için sunumunuz sisteme yüklendi.";
 
             $user->notify(
                 Notification::make()
