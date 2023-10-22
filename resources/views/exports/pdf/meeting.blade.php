@@ -28,6 +28,10 @@
         .content {
             clear: both;
         }
+
+        .label {
+            margin: 0.5rem 0;
+        }
     </style>
 </head>
 <body>
@@ -55,7 +59,7 @@
     <h3>Sunumlar</h3>
     @forelse($meeting->presentations as $presentation)
         <div class="label">
-            <b>{{ $presentation->user->name }}</b>
+            <b>{{ $presentation->user->name }} - </b>
             {{ $presentation->title }}
         </div>
     @empty
