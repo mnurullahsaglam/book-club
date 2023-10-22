@@ -24,6 +24,7 @@ use Filament\Infolists\Components\TextEntry\TextEntrySize;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\FontWeight;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
@@ -137,7 +138,13 @@ class MeetingResource extends Resource
             ->actions([
                 ViewAction::make(),
                 EditAction::make(),
-                DeleteAction::make()
+                DeleteAction::make(),
+                Action::make('export')
+                    ->label('PDF\'e Aktar')
+                    ->color('info')
+                    ->icon('heroicon-o-document')
+                    ->url(fn(Meeting $record) => route('meetings.export.pdf', $record))
+                    ->openUrlInNewTab(),
             ])
             ->bulkActions([
                 BulkActionGroup::make([
