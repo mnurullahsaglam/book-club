@@ -4,21 +4,13 @@ namespace App\Filament\Resources\PresentationResource\Pages;
 
 use App\Filament\Resources\PresentationResource;
 use App\Models\Presentation;
-use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
 use Filament\Resources\Components\Tab;
+use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
 
 class ListPresentations extends ListRecords
 {
     protected static string $resource = PresentationResource::class;
-
-    protected function getHeaderActions(): array
-    {
-        return [
-            Actions\CreateAction::make(),
-        ];
-    }
 
     public function getTabs(): array
     {
