@@ -17,7 +17,6 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Storage;
 
 class PresentationResource extends Resource
 {
@@ -99,14 +98,7 @@ class PresentationResource extends Resource
                     ->label('Dosyayı görüntüle')
                     ->icon('heroicon-o-eye')
                     ->color('info')
-                    ->url(fn($record) => Storage::url($record->file), true),
-                EditAction::make(),
-                DeleteAction::make()
-            ])
-            ->bulkActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+                    ->url(fn($record) => $record->file_url, true),
             ]);
     }
 
