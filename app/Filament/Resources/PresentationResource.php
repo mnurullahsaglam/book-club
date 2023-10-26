@@ -94,6 +94,20 @@ class PresentationResource extends Resource
                 //
             ])
             ->actions([
+                Action::make('make_recommended')
+                    ->label('Önerilenlere Ekle')
+                    ->icon('heroicon-o-check')
+                    ->color('primary')
+                    ->visible(fn(Presentation $presentation) => !$presentation->is_recommended && $presentation->user_id === auth()->id())
+                    ->action(fn(Presentation $presentation) => $presentation->update(['is_recommended' => true])),
+
+                Action::make('make_unrecommended')
+                    ->label('Önerilenlerden Çıkar')
+                    ->icon('heroicon-o-x-mark')
+                    ->color('danger')
+                    ->visible(fn(Presentation $presentation) => $presentation->is_recommended && $presentation->user_id === auth()->id())
+                    ->action(fn(Presentation $presentation) => $presentation->update(['is_recommended' => false])),
+
                 Action::make('view')
                     ->label('Dosyayı görüntüle')
                     ->icon('heroicon-o-eye')
