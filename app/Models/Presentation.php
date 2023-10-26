@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -41,6 +42,11 @@ class Presentation extends Model
         return Attribute::make(
             get: fn() => asset('uploads/' . $this->file),
         );
+    }
+
+    public function scopeOwner(Builder $query): Builder
+    {
+        return $query->where('user_id', auth()->id());
     }
 
     protected static function boot()
