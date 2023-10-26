@@ -19,6 +19,11 @@ class Presentation extends Model
         'title',
         'file',
         'description',
+        'is_recommended',
+    ];
+
+    protected $casts = [
+        'is_recommended' => 'boolean',
     ];
 
     public function user(): BelongsTo
