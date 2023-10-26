@@ -68,11 +68,6 @@ class PresentationResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('meeting.title')
-                    ->label('Toplantı')
-                    ->numeric()
-                    ->sortable(),
-
                 TextColumn::make('title')
                     ->label('Başlık')
                     ->searchable()
