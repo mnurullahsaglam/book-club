@@ -89,6 +89,10 @@ class PresentationResource extends Resource
 
                 TextColumn::make('description')
                     ->label('Açıklama'),
+
+                IconColumn::make('is_recommended')
+                    ->label('Öneriliyor mu?')
+                    ->boolean(),
             ])
             ->filters([
                 //
