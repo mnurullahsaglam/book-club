@@ -79,4 +79,9 @@ class User extends Authenticatable implements FilamentUser
     {
         return true;
     }
+
+    public function isAdmin()
+    {
+        return $this->is_admin;
+    }
 }
