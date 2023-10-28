@@ -18,6 +18,7 @@ use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
 class WriterResource extends Resource
@@ -88,7 +89,13 @@ class WriterResource extends Resource
                     ->sortable(),
 
                 ProgressColumn::make('reading_progress')
-                    ->label('Kitap İlerlemesi')
+                    ->label('Kitap İlerlemesi'),
+
+                ToggleColumn::make('is_finished')
+                    ->label('Bitti mi?')
+                    ->disabled(static function ($record) {
+                        return $record->books_count === 0;
+                    }),
             ])
             ->filters([
                 //
