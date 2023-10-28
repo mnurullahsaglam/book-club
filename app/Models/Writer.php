@@ -22,6 +22,11 @@ class Writer extends Model
         'birth_place',
         'death_date',
         'death_place',
+        'is_finished',
+    ];
+
+    protected $casts = [
+        'is_finished' => 'boolean',
     ];
 
     public function books(): HasMany
