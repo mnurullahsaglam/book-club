@@ -48,4 +48,27 @@ class Writer extends Model
                 : null,
         );
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function (Writer $writer) {
+            if ($writer->is_finished) {
+                // if the writer is finished, make finished all books
+                $writer->books()->update([
+                    'is_finished' => true,
+                ]);
+            }
+        });
+
+        static::updating(function (Writer $writer) {
+            if ($writer->is_finished) {
+                // if the writer is finished, make finished all books
+                $writer->books()->update([
+                    'is_finished' => true,
+                ]);
+            }
+        });
+    }
 }
