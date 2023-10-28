@@ -22,6 +22,11 @@ class Writer extends Model
         'birth_place',
         'death_date',
         'death_place',
+        'is_finished',
+    ];
+
+    protected $casts = [
+        'is_finished' => 'boolean',
     ];
 
     public function books(): HasMany
@@ -42,5 +47,28 @@ class Writer extends Model
                 ? $this->booksRead->count() / $this->books->count() * 100
                 : null,
         );
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function (Writer $writer) {
+            if ($writer->is_finished) {
+                // if the writer is finished, make finished all books
+                $writer->books()->update([
+                    'is_finished' => true,
+                ]);
+            }
+        });
+
+        static::updating(function (Writer $writer) {
+            if ($writer->is_finished) {
+                // if the writer is finished, make finished all books
+                $writer->books()->update([
+                    'is_finished' => true,
+                ]);
+            }
+        });
     }
 }
