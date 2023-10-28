@@ -34,4 +34,13 @@ class Writer extends Model
         return $this->hasMany(Book::class)
             ->where('is_finished', true);
     }
+
+    public function readingProgress(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->books->count() > 0
+                ? $this->booksRead->count() / $this->books->count() * 100
+                : null,
+        );
+    }
 }
