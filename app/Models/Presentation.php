@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\PresentationAssignedNotification;
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Builder;
@@ -74,6 +75,8 @@ class Presentation extends Model
                     ])
                     ->toDatabase()
             );
+
+            $user->notify(new PresentationAssignedNotification($presentation));
         });
     }
 }
