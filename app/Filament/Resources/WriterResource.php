@@ -6,6 +6,7 @@ use App\Filament\Resources\WriterResource\Pages\CreateWriter;
 use App\Filament\Resources\WriterResource\Pages\EditWriter;
 use App\Filament\Resources\WriterResource\Pages\ListWriters;
 use App\Models\Writer;
+use App\Tables\Columns\ProgressColumn;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
@@ -16,8 +17,8 @@ use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
 class WriterResource extends Resource
@@ -82,30 +83,19 @@ class WriterResource extends Resource
                     ->sortable()
                     ->searchable(),
 
-                ImageColumn::make('image')
-                    ->label('Fotoğraf'),
+                TextColumn::make('books_count')
+                    ->counts('books')
+                    ->label('Kitap Sayısı')
+                    ->sortable(),
 
-                TextColumn::make('birth_date')
-                    ->label('Doğum Tarihi')
-                    ->date()
-                    ->sortable()
-                    ->searchable(),
+                ProgressColumn::make('reading_progress')
+                    ->label('Kitap İlerlemesi'),
 
-                TextColumn::make('birth_place')
-                    ->label('Doğum Yeri')
-                    ->sortable()
-                    ->searchable(),
-
-                TextColumn::make('death_date')
-                    ->label('Ölüm Tarihi')
-                    ->date()
-                    ->sortable()
-                    ->searchable(),
-
-                TextColumn::make('death_place')
-                    ->label('Ölüm Yeri')
-                    ->sortable()
-                    ->searchable(),
+                ToggleColumn::make('is_finished')
+                    ->label('Bitti mi?')
+                    ->disabled(static function ($record) {
+                        return $record->books_count === 0;
+                    }),
             ])
             ->filters([
                 //
