@@ -34,7 +34,7 @@ class Writer extends Model
         return $this->hasMany(Book::class);
     }
 
-    public function booksRead(): HasMany
+    public function readBooks(): HasMany
     {
         return $this->hasMany(Book::class)
             ->where('is_finished', true);
@@ -44,7 +44,7 @@ class Writer extends Model
     {
         return Attribute::make(
             get: fn () => $this->books->count() > 0
-                ? $this->booksRead->count() / $this->books->count() * 100
+                ? $this->readBooks->count() / $this->books->count() * 100
                 : null,
         );
     }
