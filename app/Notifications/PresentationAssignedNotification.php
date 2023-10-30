@@ -21,7 +21,7 @@ class PresentationAssignedNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->from('bilgi@kitap.mnurullahsaglam.com')
+            ->from('Kitap Grubu')
             ->subject('Yeni Sunum Atandı')
             ->greeting('Merhaba!')
             ->line('Önümüzdeki toplantı için bir sunum atandı.')
