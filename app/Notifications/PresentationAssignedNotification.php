@@ -29,7 +29,7 @@ class PresentationAssignedNotification extends Notification
             ->action('Dosyayı Görüntüle', $this->presentation->file_url)
             ->salutation('Keyifli okumalar,')
             ->attach($this->presentation->file_url, [
-                'as' => $this->presentation->title,
+                'as' => $this->presentation->title . '.pdf',
                 'mime' => 'application/pdf',
             ]);
     }
