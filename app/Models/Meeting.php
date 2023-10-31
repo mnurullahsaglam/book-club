@@ -43,4 +43,9 @@ class Meeting extends Model
         return $this->belongsToMany(User::class)
             ->withPivot('reason_for_not_participating');
     }
+
+    public function additionalDocuments(): HasMany
+    {
+        return $this->hasMany(AdditionalDocument::class);
+    }
 }
