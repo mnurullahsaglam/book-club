@@ -123,6 +123,11 @@ class MeetingResource extends Resource
                     ->numeric()
                     ->sortable(),
 
+                TextColumn::make('date')
+                    ->label('Tarih')
+                    ->date('d F Y')
+                    ->sortable(),
+
                 TextColumn::make('order')
                     ->label('Sıra')
                     ->numeric()
