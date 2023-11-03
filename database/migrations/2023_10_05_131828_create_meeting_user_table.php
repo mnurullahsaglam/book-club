@@ -14,8 +14,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('meeting_user', function (Blueprint $table) {
+            $table->id();
             $table->foreignIdFor(Meeting::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
+            $table->boolean('is_participated')->default(false);
             $table->string('reason_for_not_participating')->nullable();
         });
     }
