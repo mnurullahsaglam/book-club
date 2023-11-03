@@ -47,6 +47,17 @@ class PresentationsRelationManager extends RelationManager
                     ->maxLength(255)
                     ->columnSpanFull(),
 
+                TextInput::make('author')
+                    ->label('Müellif')
+                    ->maxLength(255)
+                    ->columnSpanFull(),
+
+                TextInput::make('publication_year')
+                    ->label('Yayım Yılı')
+                    ->numeric()
+                    ->maxValue(date('Y'))
+                    ->columnSpanFull(),
+
                 FileUpload::make('file')
                     ->label('Dosya')
                     ->required()
