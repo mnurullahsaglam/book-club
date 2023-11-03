@@ -19,6 +19,8 @@ class Presentation extends Model
         'user_id',
         'meeting_id',
         'title',
+        'author',
+        'publication_year',
         'file',
         'description',
         'is_recommended',
