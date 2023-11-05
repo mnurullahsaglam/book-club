@@ -44,8 +44,27 @@ class Meeting extends Model
             ->withPivot('reason_for_not_participating');
     }
 
+    public function participatedUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)
+            ->withPivot('reason_for_not_participating')
+            ->wherePivot('is_participated', true);
+    }
+
+    public function abstainedUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)
+            ->withPivot('reason_for_not_participating')
+            ->wherePivot('is_participated', false);
+    }
+
     public function additionalDocuments(): HasMany
     {
         return $this->hasMany(AdditionalDocument::class);
+    }
+
+    public function meetingUsers(): HasMany
+    {
+        return $this->hasMany(MeetingUser::class);
     }
 }
