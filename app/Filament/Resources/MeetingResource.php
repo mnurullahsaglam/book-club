@@ -8,14 +8,17 @@ use App\Filament\Resources\MeetingResource\Pages\ListMeetings;
 use App\Filament\Resources\MeetingResource\Pages\ViewMeeting;
 use App\Filament\Resources\MeetingResource\RelationManagers\PresentationsRelationManager;
 use App\Models\Meeting;
-use Filament\Forms\Components\CheckboxList;
+use App\Models\User;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Infolists\Components\Group;
 use Filament\Infolists\Components\ImageEntry;
@@ -32,7 +35,6 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class MeetingResource extends Resource
@@ -94,11 +96,38 @@ class MeetingResource extends Resource
 
                 Section::make('Katılımcılar')
                     ->schema([
-                        CheckboxList::make('users')
-                            ->label('Katılımcılar')
-                            ->relationship('users', 'name', fn(Builder $query) => $query->active())
-                            ->bulkToggleable()
-                            ->live(),
+                        Repeater::make('meetingUsers')
+                            ->relationship('meetingUsers')
+                            ->hiddenLabel()
+                            ->schema([
+                                Hidden::make('user_id')
+                                    ->default(fn(Get $get) => $get('user_id')),
+
+                                Checkbox::make('is_participated')
+                                    ->label(function (Get $get, $record) {
+                                        return $get('name') ?? $record->user->name;
+                                    })
+                                    ->inline()
+                                    ->default(true)
+                                    ->live(),
+
+                                TextInput::make('reason_for_not_participating')
+                                    ->hiddenLabel()
+                                    ->placeholder('Katılmama sebebi')
+                                    ->columnSpanFull()
+                                    ->hidden(function (Get $get) {
+                                        return $get('is_participated');
+                                    }),
+                            ])
+                            ->reorderable(false)
+                            ->deletable(false)
+                            ->addable(false)
+                            ->default(User::active()->get()->map(fn(User $user) => [
+                                'name' => $user->name,
+                                'user_id' => $user->id,
+                                'is_participated' => true,
+                            ])->toArray()),
+
 
                         Repeater::make('guests')
                             ->label('Konuklar')
@@ -110,7 +139,7 @@ class MeetingResource extends Resource
                             ])
                             ->addActionLabel('Konuk ekle')
                             ->defaultItems(0)
-                    ])
+                    ]),
             ]);
     }
 
@@ -182,8 +211,8 @@ class MeetingResource extends Resource
                                 ->inlineLabel()
                                 ->columnSpanFull(),
 
-                            TextEntry::make('users.name')
-                                ->label('Katılımcılar')
+                            TextEntry::make('abstainedUsers.name')
+                                ->label('Katılmayanlar')
                                 ->listWithLineBreaks()
                                 ->bulleted()
                                 ->columnSpanFull(),
