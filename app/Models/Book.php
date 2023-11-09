@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\Slugger;
 use Filament\Notifications\Notification;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -48,6 +49,13 @@ class Book extends Model
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function imageUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => asset('uploads/' . $this->image),
+        );
     }
 
     protected static function boot()
