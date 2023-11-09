@@ -211,10 +211,11 @@ class MeetingResource extends Resource
                                 ->inlineLabel()
                                 ->columnSpanFull(),
 
-                            TextEntry::make('abstainedUsers.name')
+                            TextEntry::make('abstainedUsers')
                                 ->label('Katılmayanlar')
                                 ->listWithLineBreaks()
                                 ->bulleted()
+                                ->formatStateUsing(fn($state) => $state->name . ' (' . $state->pivot->reason_for_not_participating . ')')
                                 ->columnSpanFull(),
 
                             TextEntry::make('guests')
