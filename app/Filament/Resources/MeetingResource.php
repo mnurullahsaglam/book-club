@@ -208,8 +208,7 @@ class MeetingResource extends Resource
 
                             TextEntry::make('location')
                                 ->label('Mekân: ')
-                                ->inlineLabel()
-                                ->columnSpanFull(),
+                                ->inlineLabel(),
 
                             TextEntry::make('abstainedUsers')
                                 ->label('Katılmayanlar')
