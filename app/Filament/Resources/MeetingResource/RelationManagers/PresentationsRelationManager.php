@@ -60,7 +60,6 @@ class PresentationsRelationManager extends RelationManager
 
                 FileUpload::make('file')
                     ->label('Dosya')
-                    ->required()
                     ->directory('presentations')
                     ->disk('public')
                     ->columnSpanFull(),
