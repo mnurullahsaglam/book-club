@@ -177,8 +177,7 @@ class MeetingResource extends Resource
                     ->label('PDF\'e Aktar')
                     ->color('info')
                     ->icon('heroicon-o-document')
-                    ->url(fn(Meeting $record) => route('meetings.export.pdf', $record))
-                    ->openUrlInNewTab(),
+                    ->url(fn(Meeting $record) => route('meetings.export.pdf', $record), true),
             ])
             ->bulkActions([
                 BulkActionGroup::make([
