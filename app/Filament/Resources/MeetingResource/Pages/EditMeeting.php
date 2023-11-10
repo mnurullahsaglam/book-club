@@ -4,7 +4,8 @@ namespace App\Filament\Resources\MeetingResource\Pages;
 
 use App\Filament\Resources\MeetingResource;
 use App\Traits\FilamentRedirect;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\ViewAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditMeeting extends EditRecord
@@ -16,7 +17,9 @@ class EditMeeting extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            ViewAction::make()
+                ->color('info'),
+            DeleteAction::make(),
         ];
     }
 }
