@@ -47,6 +47,13 @@ class Presentation extends Model
         );
     }
 
+    public function title(): Attribute
+    {
+        return Attribute::make(
+            set: fn(string $value) => ucwords(strtolower($value)),
+        );
+    }
+
     public function scopeOwner(Builder $query): Builder
     {
         return $query->where('user_id', auth()->id());
