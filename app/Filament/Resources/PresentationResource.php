@@ -17,6 +17,7 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class PresentationResource extends Resource
 {
@@ -122,8 +123,21 @@ class PresentationResource extends Resource
     {
         return [
             'index' => ListPresentations::route('/'),
-            'create' => CreatePresentation::route('/create'),
-            'edit' => EditPresentation::route('/{record}/edit'),
         ];
+    }
+
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return false;
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return false;
     }
 }
