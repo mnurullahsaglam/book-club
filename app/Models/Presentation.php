@@ -30,35 +30,6 @@ class Presentation extends Model
         'is_recommended' => 'boolean',
     ];
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    public function meeting(): BelongsTo
-    {
-        return $this->belongsTo(Meeting::class);
-    }
-
-    public function fileUrl(): Attribute
-    {
-        return Attribute::make(
-            get: fn() => asset('uploads/' . $this->file),
-        );
-    }
-
-    public function title(): Attribute
-    {
-        return Attribute::make(
-            set: fn(string $value) => ucwords(strtolower($value)),
-        );
-    }
-
-    public function scopeOwner(Builder $query): Builder
-    {
-        return $query->where('user_id', auth()->id());
-    }
-
     protected static function boot()
     {
         parent::boot();
@@ -78,8 +49,8 @@ class Presentation extends Model
                         Action::make('view')
                             ->label('Görüntüle')
                             ->button()
-                            ->url($presentation->file_url)
-                            ->openUrlInNewTab()
+                            ->url($presentation->file_url, true)
+                            ->visible(fn() => $presentation->file)
                             ->markAsRead(),
                     ])
                     ->toDatabase()
@@ -87,5 +58,34 @@ class Presentation extends Model
 
             $user->notify(new PresentationAssignedNotification($presentation));
         });
+    }
+
+    public function title(): Attribute
+    {
+        return Attribute::make(
+            set: fn(string $value) => ucwords(strtolower($value)),
+        );
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function meeting(): BelongsTo
+    {
+        return $this->belongsTo(Meeting::class);
+    }
+
+    public function fileUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => asset('uploads/' . $this->file),
+        );
+    }
+
+    public function scopeOwner(Builder $query): Builder
+    {
+        return $query->where('user_id', auth()->id());
     }
 }
