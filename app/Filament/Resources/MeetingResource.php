@@ -9,6 +9,7 @@ use App\Filament\Resources\MeetingResource\Pages\ViewMeeting;
 use App\Filament\Resources\MeetingResource\RelationManagers\PresentationsRelationManager;
 use App\Models\Meeting;
 use App\Models\User;
+use App\Notifications\MeetingSummaryNotification;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
@@ -36,6 +37,7 @@ use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Notification;
 
 class MeetingResource extends Resource
 {
@@ -178,6 +180,14 @@ class MeetingResource extends Resource
                     ->color('info')
                     ->icon('heroicon-o-document')
                     ->url(fn(Meeting $record) => route('meetings.export.pdf', $record), true),
+                Action::make('send-summary')
+                    ->label('Özet Gönder')
+                    ->color('success')
+                    ->icon('heroicon-o-envelope')
+                    ->action(
+                        fn(Meeting $record) => Notification::send(User::active()->get(), new MeetingSummaryNotification($record))
+                    )
+                    ->visible(fn() => auth()->user()->is_admin),
             ])
             ->bulkActions([
                 BulkActionGroup::make([
