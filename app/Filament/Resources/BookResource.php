@@ -165,8 +165,9 @@ class BookResource extends Resource
                             ->label('Sayfa Sayısı')
                             ->columnSpan(3),
 
-                        TextEntry::make('reviews_avg_rating')
+                        TextEntry::make('reviews.rating')
                             ->label('Ortalama Puan')
+                            ->formatStateUsing(fn (Book $record) => number_format($record->reviews()->whereNotNull('rating')->avg('rating'), 1, ','))
                             ->columnSpan(3),
                     ])
                         ->columns(6),
