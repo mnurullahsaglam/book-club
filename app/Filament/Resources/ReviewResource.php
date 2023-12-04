@@ -37,16 +37,20 @@ class ReviewResource extends Resource
             ->schema([
                 Select::make('user_id')
                     ->relationship('user', 'name')
+                    ->hidden()
                     ->required(),
 
                 Select::make('book_id')
                     ->relationship('book', 'name')
+                    ->hidden()
                     ->required(),
 
                 RatingStar::make()
-                    ->label('Rating'),
+                    ->label('Puan')
+                    ->required(),
 
                 Forms\Components\Textarea::make('comment')
+                    ->label('Yorum')
                     ->maxLength(65535)
                     ->columnSpanFull(),
             ]);
@@ -55,7 +59,7 @@ class ReviewResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query) => $query->where('user_id', auth()->id()))
+            ->modifyQueryUsing(fn(Builder $query) => $query->where('user_id', auth()->id()))
             ->columns([
                 TextColumn::make('book.name')
                     ->label('Kitap')
@@ -71,7 +75,6 @@ class ReviewResource extends Resource
             ])
             ->actions([
                 EditAction::make()
-                    ->visible(fn(Review $review) => $review->user_id === auth()->id()),
             ])
             ->bulkActions([
                 BulkActionGroup::make([
