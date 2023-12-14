@@ -146,6 +146,7 @@ class MeetingResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultPaginationPageOption(25)
             ->columns([
                 TextColumn::make('book.name')
                     ->label('Kitap')
