@@ -61,7 +61,7 @@ class MeetingResource extends Resource
                     ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->writer->name} - {$record->name}")
                     ->required()
                     ->live()
-                    ->afterStateUpdated(fn(Set $set, ?string $state) => $set('order', Meeting::where('book_id', $state)->max('order') + 1)),
+                    ->afterStateUpdated(fn(Set $set, ?string $state) => $set('order', Meeting::where('writer_id', $state)->max('order')->increment())),
 
                 TextInput::make('order')
                     ->label('Sıra')
