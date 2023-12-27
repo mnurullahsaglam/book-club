@@ -7,6 +7,7 @@ use App\Filament\Resources\MeetingResource\Pages\EditMeeting;
 use App\Filament\Resources\MeetingResource\Pages\ListMeetings;
 use App\Filament\Resources\MeetingResource\Pages\ViewMeeting;
 use App\Filament\Resources\MeetingResource\RelationManagers\PresentationsRelationManager;
+use App\Models\Book;
 use App\Models\Meeting;
 use App\Models\User;
 use Filament\Forms\Components\Checkbox;
@@ -61,13 +62,18 @@ class MeetingResource extends Resource
                     ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->writer->name} - {$record->name}")
                     ->required()
                     ->live()
-                    ->afterStateUpdated(fn(Set $set, ?string $state) => $set('order', Meeting::where('book_id', $state)->max('order') + 1)),
+                    ->afterStateUpdated(fn(Set $set, ?string $state) => $set('order', Meeting::whereHas('book', function ($query) use ($state) {
+                            $query->where('writer_id', Book::find(1)->writer_id);
+                        })
+                            ->max('order') + 1)),
 
                 TextInput::make('order')
                     ->label('Sıra')
                     ->required()
                     ->numeric()
-                    ->minValue(1),
+                    ->minValue(1)
+                    ->disabled()
+                    ->hiddenOn('edit'),
 
                 TextInput::make('title')
                     ->label('Başlık')

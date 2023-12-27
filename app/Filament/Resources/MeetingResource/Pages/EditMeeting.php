@@ -6,6 +6,7 @@ use App\Filament\Resources\MeetingResource;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Contracts\Support\Htmlable;
 
 class EditMeeting extends EditRecord
 {
@@ -18,5 +19,10 @@ class EditMeeting extends EditRecord
                 ->color('info'),
             DeleteAction::make(),
         ];
+    }
+
+    public function getTitle(): Htmlable|string
+    {
+        return $this->record->ordered_title;
     }
 }
