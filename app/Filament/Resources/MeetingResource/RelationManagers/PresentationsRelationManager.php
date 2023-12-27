@@ -2,11 +2,13 @@
 
 namespace App\Filament\Resources\MeetingResource\RelationManagers;
 
+use App\Models\Presentation;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\BulkActionGroup;
@@ -30,6 +32,92 @@ class PresentationsRelationManager extends RelationManager
 
     protected static ?string $title = 'Sunumlar';
 
+    public function table(Table $table): Table
+    {
+        return $table
+            ->recordTitleAttribute('title')
+            ->columns([
+                TextColumn::make('title')
+                    ->label('Başlık')
+                    ->searchable()
+                    ->sortable(),
+
+                TextColumn::make('user.name')
+                    ->label('Kişi')
+                    ->searchable()
+                    ->sortable(),
+
+                TextColumn::make('description')
+                    ->label('Açıklama'),
+            ])
+            ->filters([
+                //
+            ])
+            ->headerActions([
+                CreateAction::make(),
+            ])
+            ->actions([
+                Action::make('assign_to_another_user')
+                    ->label('Başkasına Ata')
+                    ->icon('heroicon-o-adjustments-horizontal')
+                    ->color('success')
+                    ->form([
+                        Select::make('user_id')
+                            ->relationship('user', 'name', fn(Builder $query) => $query->active())
+                            ->label('Kişi')
+                            ->required()
+                            ->default(fn(Presentation $presentation) => $presentation->user_id)
+                            ->columnSpanFull(),
+                    ])
+                    ->action(function (Presentation $presentation, array $data) {
+                        $presentation->update([
+                            'user_id' => $data['user_id'],
+                        ]);
+
+                        Notification::make()
+                            ->title('Sunum Başka Bir Kişiye Atandı')
+                            ->success()
+                            ->send();
+                    })
+                    ->visible(auth()->user()->is_admin),
+                Action::make('assign_to_another_meeting')
+                    ->label('Başka Toplantıya Ata')
+                    ->icon('heroicon-o-adjustments-vertical')
+                    ->color('gray')
+                    ->form([
+                        Select::make('meeting_id')
+                            ->relationship('meeting', 'title')
+                            ->label('Toplantı')
+                            ->required()
+                            ->default(fn(Presentation $presentation) => $presentation->meeting_id)
+                            ->columnSpanFull(),
+                    ])
+                    ->action(function (Presentation $presentation, array $data) {
+                        $presentation->update([
+                            'meeting_id' => $data['meeting_id'],
+                        ]);
+
+                        Notification::make()
+                            ->title('Sunum Başka Bir Toplantıya Atandı')
+                            ->success()
+                            ->send();
+                    })
+                    ->visible(auth()->user()->is_admin),
+                Action::make('view')
+                    ->label('Dosyayı görüntüle')
+                    ->icon('heroicon-o-eye')
+                    ->color('info')
+                    ->url(fn($record) => $record->file_url)
+                    ->openUrlInNewTab(),
+                EditAction::make(),
+                DeleteAction::make(),
+            ])
+            ->bulkActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                ]),
+            ]);
+    }
 
     public function form(Form $form): Form
     {
@@ -67,47 +155,6 @@ class PresentationsRelationManager extends RelationManager
                 RichEditor::make('description')
                     ->label('Açıklama')
                     ->columnSpanFull(),
-            ]);
-    }
-
-    public function table(Table $table): Table
-    {
-        return $table
-            ->recordTitleAttribute('title')
-            ->columns([
-                TextColumn::make('title')
-                    ->label('Başlık')
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('user.name')
-                    ->label('Kişi')
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('description')
-                    ->label('Açıklama'),
-            ])
-            ->filters([
-                //
-            ])
-            ->headerActions([
-                CreateAction::make(),
-            ])
-            ->actions([
-                Action::make('view')
-                    ->label('Dosyayı görüntüle')
-                    ->icon('heroicon-o-eye')
-                    ->color('info')
-                    ->url(fn($record) => $record->file_url)
-                    ->openUrlInNewTab(),
-                EditAction::make(),
-                DeleteAction::make(),
-            ])
-            ->bulkActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
             ]);
     }
 }
