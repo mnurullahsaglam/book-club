@@ -187,9 +187,7 @@ class MeetingResource extends Resource
                     ->url(fn(Meeting $record) => route('meetings.export.pdf', $record), true),
             ])
             ->bulkActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+                DeleteBulkAction::make(),
             ]);
     }
 
