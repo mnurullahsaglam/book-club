@@ -11,6 +11,7 @@ use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Actions\DeleteAction;
@@ -46,9 +47,6 @@ class PresentationsRelationManager extends RelationManager
                     ->label('Kişi')
                     ->searchable()
                     ->sortable(),
-
-                TextColumn::make('description')
-                    ->label('Açıklama'),
             ])
             ->filters([
                 //
@@ -57,60 +55,62 @@ class PresentationsRelationManager extends RelationManager
                 CreateAction::make(),
             ])
             ->actions([
-                Action::make('assign_to_another_user')
-                    ->label('Başkasına Ata')
-                    ->icon('heroicon-o-adjustments-horizontal')
-                    ->color('success')
-                    ->form([
-                        Select::make('user_id')
-                            ->relationship('user', 'name', fn(Builder $query) => $query->active())
-                            ->label('Kişi')
-                            ->required()
-                            ->default(fn(Presentation $presentation) => $presentation->user_id)
-                            ->columnSpanFull(),
-                    ])
-                    ->action(function (Presentation $presentation, array $data) {
-                        $presentation->update([
-                            'user_id' => $data['user_id'],
-                        ]);
+                ActionGroup::make([
+                    Action::make('assign_to_another_user')
+                        ->label('Başkasına Ata')
+                        ->icon('heroicon-o-adjustments-horizontal')
+                        ->color('success')
+                        ->form([
+                            Select::make('user_id')
+                                ->relationship('user', 'name', fn(Builder $query) => $query->active())
+                                ->label('Kişi')
+                                ->required()
+                                ->default(fn(Presentation $presentation) => $presentation->user_id)
+                                ->columnSpanFull(),
+                        ])
+                        ->action(function (Presentation $presentation, array $data) {
+                            $presentation->update([
+                                'user_id' => $data['user_id'],
+                            ]);
 
-                        Notification::make()
-                            ->title('Sunum Başka Bir Kişiye Atandı')
-                            ->success()
-                            ->send();
-                    })
-                    ->visible(auth()->user()->is_admin),
-                Action::make('assign_to_another_meeting')
-                    ->label('Başka Toplantıya Ata')
-                    ->icon('heroicon-o-adjustments-vertical')
-                    ->color('gray')
-                    ->form([
-                        Select::make('meeting_id')
-                            ->relationship('meeting', 'title')
-                            ->label('Toplantı')
-                            ->required()
-                            ->default(fn(Presentation $presentation) => $presentation->meeting_id)
-                            ->columnSpanFull(),
-                    ])
-                    ->action(function (Presentation $presentation, array $data) {
-                        $presentation->update([
-                            'meeting_id' => $data['meeting_id'],
-                        ]);
+                            Notification::make()
+                                ->title('Sunum Başka Bir Kişiye Atandı')
+                                ->success()
+                                ->send();
+                        })
+                        ->visible(auth()->user()->is_admin),
+                    Action::make('assign_to_another_meeting')
+                        ->label('Başka Toplantıya Ata')
+                        ->icon('heroicon-o-adjustments-vertical')
+                        ->color('gray')
+                        ->form([
+                            Select::make('meeting_id')
+                                ->relationship('meeting', 'title')
+                                ->label('Toplantı')
+                                ->required()
+                                ->default(fn(Presentation $presentation) => $presentation->meeting_id)
+                                ->columnSpanFull(),
+                        ])
+                        ->action(function (Presentation $presentation, array $data) {
+                            $presentation->update([
+                                'meeting_id' => $data['meeting_id'],
+                            ]);
 
-                        Notification::make()
-                            ->title('Sunum Başka Bir Toplantıya Atandı')
-                            ->success()
-                            ->send();
-                    })
-                    ->visible(auth()->user()->is_admin),
-                Action::make('view')
-                    ->label('Dosyayı görüntüle')
-                    ->icon('heroicon-o-eye')
-                    ->color('info')
-                    ->url(fn($record) => $record->file_url)
-                    ->openUrlInNewTab(),
-                EditAction::make(),
-                DeleteAction::make(),
+                            Notification::make()
+                                ->title('Sunum Başka Bir Toplantıya Atandı')
+                                ->success()
+                                ->send();
+                        })
+                        ->visible(auth()->user()->is_admin),
+                    Action::make('view')
+                        ->label('Dosyayı görüntüle')
+                        ->icon('heroicon-o-eye')
+                        ->color('info')
+                        ->url(fn($record) => $record->file_url)
+                        ->openUrlInNewTab(),
+                    EditAction::make(),
+                    DeleteAction::make(),
+                ]),
             ])
             ->bulkActions([
                 BulkActionGroup::make([
