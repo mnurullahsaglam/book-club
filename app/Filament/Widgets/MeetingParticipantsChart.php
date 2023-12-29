@@ -2,17 +2,17 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\Meeting;
 use App\Models\User;
 use Filament\Widgets\ChartWidget;
-use Illuminate\Contracts\Support\Htmlable;
 
 class MeetingParticipantsChart extends ChartWidget
 {
     protected static ?string $heading = 'Katılım Durumu';
 
-    public function getDescription(): string|Htmlable|null
+    public function getDescription(): ?string
     {
-        return 'Toplantıya katılmama sayısını gösterir.';
+        return Meeting::past()->count() . ' toplantı yapıldı.';
     }
 
     protected function getData(): array
@@ -22,7 +22,7 @@ class MeetingParticipantsChart extends ChartWidget
                 $query->where('is_participated', false);
             }])
             ->whereHas('meetings', function ($query) {
-                $query->where('date', '<=', now());
+                $query->past();
             })
             ->get();
 
