@@ -79,9 +79,6 @@ class PresentationResource extends Resource
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('description')
-                    ->label('Açıklama'),
-
                 IconColumn::make('is_recommended')
                     ->label('Öneriliyor mu?')
                     ->boolean(),

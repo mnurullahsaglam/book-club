@@ -18,7 +18,6 @@ use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
@@ -137,9 +136,7 @@ class BookResource extends Resource
                 DeleteAction::make()
             ])
             ->bulkActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+                DeleteBulkAction::make(),
             ]);
     }
 
@@ -167,7 +164,7 @@ class BookResource extends Resource
 
                         TextEntry::make('reviews.rating')
                             ->label('Ortalama Puan')
-                            ->formatStateUsing(fn (Book $record) => number_format($record->reviews()->whereNotNull('rating')->avg('rating'), 1, ','))
+                            ->formatStateUsing(fn(Book $record) => number_format($record->reviews()->whereNotNull('rating')->avg('rating'), 1, ','))
                             ->columnSpan(3),
                     ])
                         ->columns(6),
