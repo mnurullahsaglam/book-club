@@ -10,6 +10,8 @@ class MeetingParticipantsChart extends ChartWidget
 {
     protected static ?string $heading = 'Katılım Durumu';
 
+    protected static ?int $sort = 3;
+
     public function getDescription(): ?string
     {
         return Meeting::past()->count() . ' toplantı yapıldı.';
