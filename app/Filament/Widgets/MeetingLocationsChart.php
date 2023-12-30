@@ -10,6 +10,8 @@ class MeetingLocationsChart extends ChartWidget
 {
     protected static ?string $heading = 'Mekânlar';
 
+    protected static ?int $sort = 2;
+
     public function getDescription(): ?string
     {
         return Meeting::past()->count() . ' toplantı yapıldı.';
