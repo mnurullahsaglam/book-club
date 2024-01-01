@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\MeetingResource\RelationManagers;
 
+use App\Models\Meeting;
 use App\Models\Presentation;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
@@ -89,6 +90,7 @@ class PresentationsRelationManager extends RelationManager
                                 ->label('Toplantı')
                                 ->required()
                                 ->default(fn(Presentation $presentation) => $presentation->meeting_id)
+                                ->getOptionLabelFromRecordUsing(fn (Meeting $meeting) => "({$meeting->date->format('d/m/Y')}) {$meeting->ordered_title}")
                                 ->columnSpanFull(),
                         ])
                         ->action(function (Presentation $presentation, array $data) {
