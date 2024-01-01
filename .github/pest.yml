@@ -2,9 +2,9 @@ name: run-tests
 
 on:
   push:
-    branches: [master]
+    branches: [master, development]
   pull_request:
-    branches: [master]
+    branches: [master, development]
 
 jobs:
   test:
@@ -13,7 +13,7 @@ jobs:
       fail-fast: true
       matrix:
         os: [ubuntu-latest, windows-latest]
-        php: [8.2, 8.1]
+        php: [8.2]
         laravel: [10.*]
         stability: [prefer-lowest, prefer-stable]
         include:
