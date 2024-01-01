@@ -86,7 +86,7 @@ class PresentationsRelationManager extends RelationManager
                         ->color('gray')
                         ->form([
                             Select::make('meeting_id')
-                                ->relationship('meeting', 'title')
+                                ->relationship('meeting', 'title', fn(Builder $query) => $query->orderBy('order'))
                                 ->label('Toplantı')
                                 ->required()
                                 ->default(fn(Presentation $presentation) => $presentation->meeting_id)
