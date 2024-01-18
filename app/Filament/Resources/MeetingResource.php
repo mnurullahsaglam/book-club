@@ -71,9 +71,7 @@ class MeetingResource extends Resource
                     ->label('Sıra')
                     ->required()
                     ->numeric()
-                    ->minValue(1)
-                    ->disabled()
-                    ->hiddenOn('edit'),
+                    ->minValue(1),
 
                 TextInput::make('title')
                     ->label('Başlık')
