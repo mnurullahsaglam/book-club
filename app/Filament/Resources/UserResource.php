@@ -51,7 +51,8 @@ class UserResource extends Resource
                     ->label('Parola')
                     ->password()
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->hiddenOn('edit'),
 
                 DatePicker::make('registered_at')
                     ->label('Kayıt Tarihi'),
