@@ -11,11 +11,11 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
 class UserResource extends Resource
@@ -79,9 +79,8 @@ class UserResource extends Resource
                     ->date('d F Y')
                     ->sortable(),
 
-                Tables\Columns\IconColumn::make('is_active')
-                    ->label('Aktif')
-                    ->boolean(),
+                ToggleColumn::make('is_active')
+                    ->label('Aktif'),
             ])
             ->filters([
                 //
