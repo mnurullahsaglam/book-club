@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\MeetingResource\RelationManagers;
 
+use App\Models\Meeting;
 use App\Models\Presentation;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
@@ -85,10 +86,11 @@ class PresentationsRelationManager extends RelationManager
                         ->color('gray')
                         ->form([
                             Select::make('meeting_id')
-                                ->relationship('meeting', 'title')
+                                ->relationship('meeting', 'title', fn(Builder $query) => $query->orderBy('order'))
                                 ->label('Toplantı')
                                 ->required()
                                 ->default(fn(Presentation $presentation) => $presentation->meeting_id)
+                                ->getOptionLabelFromRecordUsing(fn (Meeting $meeting) => "({$meeting->date->format('d/m/Y')}) {$meeting->ordered_title}")
                                 ->columnSpanFull(),
                         ])
                         ->action(function (Presentation $presentation, array $data) {
