@@ -73,7 +73,7 @@ class Meeting extends Model
     public function orderedTitle(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->order . '. ' . $this->title,
+            get: fn () => $this->order.'. '.$this->title,
         );
     }
 

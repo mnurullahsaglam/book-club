@@ -22,7 +22,7 @@ class StatsOverview extends BaseWidget
             Stat::make('Sayfa Sayısı', Book::whereNotNull('page_count')->sum('page_count')),
             Stat::make('Sunum Sayısı', Presentation::count()),
             Stat::make('Misafir Sayısı', Meeting::whereJsonLength('guests', '>', 0)->pluck('guests')->flatten()->unique()->count())
-                ->description('Toplam misafir sayısı: ' . Meeting::whereJsonLength('guests', '>', 0)->pluck('guests')->flatten()->count())
+                ->description('Toplam misafir sayısı: '.Meeting::whereJsonLength('guests', '>', 0)->pluck('guests')->flatten()->count())
                 ->chart(Meeting::past()->pluck('guests')->map(function ($guests) {
                     return count($guests);
                 })->toArray())

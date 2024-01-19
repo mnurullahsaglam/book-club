@@ -14,7 +14,7 @@ class MeetingParticipantsChart extends ChartWidget
 
     public function getDescription(): ?string
     {
-        return Meeting::past()->count() . ' toplantı yapıldı.';
+        return Meeting::past()->count().' toplantı yapıldı.';
     }
 
     protected function getData(): array
