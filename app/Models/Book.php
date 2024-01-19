@@ -54,7 +54,7 @@ class Book extends Model
     public function imageUrl(): Attribute
     {
         return Attribute::make(
-            get: fn() => asset('uploads/' . $this->image),
+            get: fn () => asset('uploads/'.$this->image),
         );
     }
 

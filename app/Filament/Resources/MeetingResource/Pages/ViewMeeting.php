@@ -21,7 +21,7 @@ class ViewMeeting extends ViewRecord
             Action::make('export')
                 ->label('PDF\'e Aktar')
                 ->color('info')
-                ->url(fn(Meeting $record) => route('meetings.export.pdf', $record), true)
+                ->url(fn (Meeting $record) => route('meetings.export.pdf', $record), true),
         ];
     }
 }

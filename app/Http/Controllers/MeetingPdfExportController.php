@@ -18,6 +18,6 @@ class MeetingPdfExportController extends Controller
                 })->get()])
             ->setPaper('a4')
 //            ->save(public_path('exports/pdf/meetings/' . $meeting->book->writer->name . '-' . $meeting->order . '.pdf'))
-            ->stream($meeting->date . '.pdf');
+            ->stream($meeting->date.'.pdf');
     }
 }

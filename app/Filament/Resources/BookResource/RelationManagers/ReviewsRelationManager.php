@@ -19,7 +19,6 @@ class ReviewsRelationManager extends RelationManager
 
     protected static ?string $title = 'Değerlendirmeler';
 
-
     public function form(Form $form): Form
     {
         return $form

@@ -29,7 +29,6 @@ class AdditionalDocumentResource extends Resource
 
     protected static ?string $pluralLabel = 'Ek Dosyalar';
 
-
     public static function form(Form $form): Form
     {
         return $form
@@ -67,7 +66,7 @@ class AdditionalDocumentResource extends Resource
                     ->label('Dosyayı görüntüle')
                     ->icon('heroicon-o-eye')
                     ->color('info')
-                    ->url(fn($record) => $record->file_url, true),
+                    ->url(fn ($record) => $record->file_url, true),
                 EditAction::make(),
                 DeleteAction::make(),
             ])

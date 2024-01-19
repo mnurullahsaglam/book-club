@@ -10,7 +10,7 @@ class AdditionalDocument extends Model
 {
     protected $fillable = [
         'name',
-        'file'
+        'file',
     ];
 
     public function meeting(): BelongsTo
@@ -21,7 +21,7 @@ class AdditionalDocument extends Model
     public function fileUrl(): Attribute
     {
         return Attribute::make(
-            get: fn() => asset('uploads/' . $this->file),
+            get: fn () => asset('uploads/'.$this->file),
         );
     }
 }
