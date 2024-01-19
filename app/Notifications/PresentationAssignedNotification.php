@@ -25,9 +25,9 @@ class PresentationAssignedNotification extends Notification
             ->greeting('Merhaba!')
             ->line('Önümüzdeki toplantı için bir sunum atandı.')
             ->when($this->presentation->file, function (MailMessage $mailMessage) {
-                $mailMessage->line("Dosyayı ekte bulabilir veya aşağıdaki butona tıklayarak tarayıcı üzerinde görüntüleyebilirsiniz.");
+                $mailMessage->line('Dosyayı ekte bulabilir veya aşağıdaki butona tıklayarak tarayıcı üzerinde görüntüleyebilirsiniz.');
             }, function (MailMessage $mailMessage) {
-                $mailMessage->line("Detayları panel üzerinden sunumu görüntüleyebilirsiniz.");
+                $mailMessage->line('Detayları panel üzerinden sunumu görüntüleyebilirsiniz.');
             })
             ->when($this->presentation->file, function (MailMessage $mailMessage) {
                 $mailMessage->action('Dosyayı Görüntüle', $this->presentation->file_url);
@@ -35,7 +35,7 @@ class PresentationAssignedNotification extends Notification
             ->salutation('Keyifli okumalar,')
             ->when($this->presentation->file, function (MailMessage $mailMessage) {
                 $mailMessage->attach($this->presentation->file_url, [
-                    'as' => $this->presentation->title . '.pdf',
+                    'as' => $this->presentation->title.'.pdf',
                     'mime' => 'application/pdf',
                 ]);
             });

@@ -63,10 +63,10 @@ class PresentationsRelationManager extends RelationManager
                         ->color('success')
                         ->form([
                             Select::make('user_id')
-                                ->relationship('user', 'name', fn(Builder $query) => $query->active())
+                                ->relationship('user', 'name', fn (Builder $query) => $query->active())
                                 ->label('Kişi')
                                 ->required()
-                                ->default(fn(Presentation $presentation) => $presentation->user_id)
+                                ->default(fn (Presentation $presentation) => $presentation->user_id)
                                 ->columnSpanFull(),
                         ])
                         ->action(function (Presentation $presentation, array $data) {
@@ -86,10 +86,10 @@ class PresentationsRelationManager extends RelationManager
                         ->color('gray')
                         ->form([
                             Select::make('meeting_id')
-                                ->relationship('meeting', 'title', fn(Builder $query) => $query->orderBy('order'))
+                                ->relationship('meeting', 'title', fn (Builder $query) => $query->orderBy('order'))
                                 ->label('Toplantı')
                                 ->required()
-                                ->default(fn(Presentation $presentation) => $presentation->meeting_id)
+                                ->default(fn (Presentation $presentation) => $presentation->meeting_id)
                                 ->getOptionLabelFromRecordUsing(fn (Meeting $meeting) => "({$meeting->date->format('d/m/Y')}) {$meeting->ordered_title}")
                                 ->columnSpanFull(),
                         ])
@@ -108,7 +108,7 @@ class PresentationsRelationManager extends RelationManager
                         ->label('Dosyayı görüntüle')
                         ->icon('heroicon-o-eye')
                         ->color('info')
-                        ->url(fn($record) => $record->file_url)
+                        ->url(fn ($record) => $record->file_url)
                         ->openUrlInNewTab(),
                     EditAction::make(),
                     DeleteAction::make(),
@@ -126,7 +126,7 @@ class PresentationsRelationManager extends RelationManager
         return $form
             ->schema([
                 Select::make('user_id')
-                    ->relationship('user', 'name', fn(Builder $query) => $query->active())
+                    ->relationship('user', 'name', fn (Builder $query) => $query->active())
                     ->label('Kişi')
                     ->required()
                     ->columnSpanFull(),

@@ -50,7 +50,7 @@ class Presentation extends Model
                             ->label('Görüntüle')
                             ->button()
                             ->url($presentation->file_url, true)
-                            ->visible(fn() => $presentation->file)
+                            ->visible(fn () => $presentation->file)
                             ->markAsRead(),
                     ])
                     ->toDatabase()
@@ -63,7 +63,7 @@ class Presentation extends Model
     public function title(): Attribute
     {
         return Attribute::make(
-            set: fn(string $value) => ucwords(strtolower($value)),
+            set: fn (string $value) => ucwords(strtolower($value)),
         );
     }
 
@@ -80,7 +80,7 @@ class Presentation extends Model
     public function fileUrl(): Attribute
     {
         return Attribute::make(
-            get: fn() => asset('uploads/' . $this->file),
+            get: fn () => asset('uploads/'.$this->file),
         );
     }
 

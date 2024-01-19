@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\PresentationResource\Pages\CreatePresentation;
-use App\Filament\Resources\PresentationResource\Pages\EditPresentation;
 use App\Filament\Resources\PresentationResource\Pages\ListPresentations;
 use App\Models\Presentation;
 use Filament\Forms\Components\FileUpload;
@@ -39,7 +37,7 @@ class PresentationResource extends Resource
             ->schema([
                 Select::make('user_id')
                     ->label('Kişi')
-                    ->relationship('user', 'name', fn(Builder $query) => $query->active())
+                    ->relationship('user', 'name', fn (Builder $query) => $query->active())
                     ->required(),
 
                 Select::make('meeting_id')
@@ -91,21 +89,21 @@ class PresentationResource extends Resource
                     ->label('Önerilenlere Ekle')
                     ->icon('heroicon-o-check')
                     ->color('primary')
-                    ->visible(fn(Presentation $presentation) => !$presentation->is_recommended && $presentation->user_id === auth()->id())
-                    ->action(fn(Presentation $presentation) => $presentation->update(['is_recommended' => true])),
+                    ->visible(fn (Presentation $presentation) => ! $presentation->is_recommended && $presentation->user_id === auth()->id())
+                    ->action(fn (Presentation $presentation) => $presentation->update(['is_recommended' => true])),
 
                 Action::make('make_unrecommended')
                     ->label('Önerilenlerden Çıkar')
                     ->icon('heroicon-o-x-mark')
                     ->color('danger')
-                    ->visible(fn(Presentation $presentation) => $presentation->is_recommended && $presentation->user_id === auth()->id())
-                    ->action(fn(Presentation $presentation) => $presentation->update(['is_recommended' => false])),
+                    ->visible(fn (Presentation $presentation) => $presentation->is_recommended && $presentation->user_id === auth()->id())
+                    ->action(fn (Presentation $presentation) => $presentation->update(['is_recommended' => false])),
 
                 Action::make('view')
                     ->label('Dosyayı görüntüle')
                     ->icon('heroicon-o-eye')
                     ->color('info')
-                    ->url(fn($record) => $record->file_url, true),
+                    ->url(fn ($record) => $record->file_url, true),
             ]);
     }
 

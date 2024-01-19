@@ -4,7 +4,6 @@ namespace App\Filament\Widgets;
 
 use App\Models\Meeting;
 use Filament\Widgets\ChartWidget;
-use Illuminate\Contracts\Support\Htmlable;
 
 class MeetingLocationsChart extends ChartWidget
 {
@@ -14,7 +13,7 @@ class MeetingLocationsChart extends ChartWidget
 
     public function getDescription(): ?string
     {
-        return Meeting::past()->count() . ' toplantı yapıldı.';
+        return Meeting::past()->count().' toplantı yapıldı.';
     }
 
     protected function getData(): array
@@ -27,16 +26,16 @@ class MeetingLocationsChart extends ChartWidget
                     'label' => 'Toplam',
                     'data' => $locations->pluck('total')->toArray(),
                     'backgroundColor' => [
-                        "#FF0000", // Red
-                        "#00FF00", // Green
-                        "#0000FF", // Blue
-                        "#FFFF00", // Yellow
-                        "#FFA500", // Orange
-                        "#800080", // Purple
-                        "#FFC0CB", // Pink
-                        "#00FFFF", // Cyan
-                        "#A52A2A", // Brown
-                        "#008080"  // Teal
+                        '#FF0000', // Red
+                        '#00FF00', // Green
+                        '#0000FF', // Blue
+                        '#FFFF00', // Yellow
+                        '#FFA500', // Orange
+                        '#800080', // Purple
+                        '#FFC0CB', // Pink
+                        '#00FFFF', // Cyan
+                        '#A52A2A', // Brown
+                        '#008080',  // Teal
                     ],
                 ],
             ],

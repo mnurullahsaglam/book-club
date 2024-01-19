@@ -29,7 +29,6 @@ use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
@@ -59,13 +58,13 @@ class MeetingResource extends Resource
                 Select::make('book_id')
                     ->label('Kitap')
                     ->relationship('book', 'name')
-                    ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->writer->name} - {$record->name}")
+                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->writer->name} - {$record->name}")
                     ->required()
                     ->live()
-                    ->afterStateUpdated(fn(Set $set, ?string $state) => $set('order', Meeting::whereHas('book', function ($query) use ($state) {
-                            $query->where('writer_id', Book::find(1)->writer_id);
-                        })
-                            ->max('order') + 1)),
+                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('order', Meeting::whereHas('book', function ($query) {
+                        $query->where('writer_id', Book::find(1)->writer_id);
+                    })
+                        ->max('order') + 1)),
 
                 TextInput::make('order')
                     ->label('Sıra')
@@ -91,58 +90,57 @@ class MeetingResource extends Resource
 
                 Section::make('Gündem Maddeleri ve Kararlar')
                     ->schema([
-                        RichEditor::make('topics')
-                            ->label('Gündem Maddeleri'),
+                    RichEditor::make('topics')
+                        ->label('Gündem Maddeleri'),
 
-                        RichEditor::make('decisions')
-                            ->label('Kararlar'),
+                    RichEditor::make('decisions')
+                        ->label('Kararlar'),
                     ]),
 
                 Section::make('Katılımcılar')
                     ->schema([
-                        Repeater::make('meetingUsers')
-                            ->relationship('meetingUsers')
-                            ->hiddenLabel()
-                            ->schema([
-                                Hidden::make('user_id')
-                                    ->default(fn(Get $get) => $get('user_id')),
+                    Repeater::make('meetingUsers')
+                        ->relationship('meetingUsers')
+                        ->hiddenLabel()
+                        ->schema([
+                            Hidden::make('user_id')
+                                ->default(fn (Get $get) => $get('user_id')),
 
-                                Checkbox::make('is_participated')
-                                    ->label(function (Get $get, $record) {
-                                        return $get('name') ?? $record->user->name;
-                                    })
-                                    ->inline()
-                                    ->default(true)
-                                    ->live(),
+                            Checkbox::make('is_participated')
+                                ->label(function (Get $get, $record) {
+                                    return $get('name') ?? $record->user->name;
+                                })
+                                ->inline()
+                                ->default(true)
+                                ->live(),
 
-                                TextInput::make('reason_for_not_participating')
-                                    ->hiddenLabel()
-                                    ->placeholder('Katılmama sebebi')
-                                    ->columnSpanFull()
-                                    ->hidden(function (Get $get) {
-                                        return $get('is_participated');
-                                    }),
-                            ])
-                            ->reorderable(false)
-                            ->deletable(false)
-                            ->addable(false)
-                            ->default(User::active()->get()->map(fn(User $user) => [
+                            TextInput::make('reason_for_not_participating')
+                                ->hiddenLabel()
+                                ->placeholder('Katılmama sebebi')
+                                ->columnSpanFull()
+                                ->hidden(function (Get $get) {
+                                    return $get('is_participated');
+                                }),
+                        ])
+                        ->reorderable(false)
+                        ->deletable(false)
+                        ->addable(false)
+                        ->default(User::active()->get()->map(fn (User $user) => [
                                 'name' => $user->name,
                                 'user_id' => $user->id,
                                 'is_participated' => true,
                             ])->toArray()),
 
-
-                        Repeater::make('guests')
-                            ->label('Konuklar')
-                            ->schema([
+                    Repeater::make('guests')
+                        ->label('Konuklar')
+                        ->schema([
                                 TextInput::make('name')
-                                    ->label('İsim')
-                                    ->required()
-                                    ->maxLength(255),
+                                ->label('İsim')
+                                ->required()
+                                ->maxLength(255),
                             ])
-                            ->addActionLabel('Konuk ekle')
-                            ->defaultItems(0)
+                        ->addActionLabel('Konuk ekle')
+                        ->defaultItems(0),
                     ]),
             ]);
     }
@@ -182,7 +180,7 @@ class MeetingResource extends Resource
                     ->label('PDF\'e Aktar')
                     ->color('info')
                     ->icon('heroicon-o-document')
-                    ->url(fn(Meeting $record) => route('meetings.export.pdf', $record), true),
+                    ->url(fn (Meeting $record) => route('meetings.export.pdf', $record), true),
             ])
             ->bulkActions([
                 DeleteBulkAction::make(),
@@ -200,7 +198,7 @@ class MeetingResource extends Resource
                                 ->size(TextEntrySize::Large)
                                 ->weight(FontWeight::Black)
                                 ->hiddenLabel()
-                                ->formatStateUsing(fn(string $state, Meeting $record) => $state . '. ' . $record->title)
+                                ->formatStateUsing(fn (string $state, Meeting $record) => $state.'. '.$record->title)
                                 ->columnSpan(3),
 
                             TextEntry::make('date')
@@ -216,7 +214,7 @@ class MeetingResource extends Resource
                                 ->label('Katılmayanlar')
                                 ->listWithLineBreaks()
                                 ->bulleted()
-                                ->formatStateUsing(fn($state) => $state->name . ' (' . $state->pivot->reason_for_not_participating . ')')
+                                ->formatStateUsing(fn ($state) => $state->name.' ('.$state->pivot->reason_for_not_participating.')')
                                 ->columnSpanFull(),
 
                             TextEntry::make('guests')
@@ -224,22 +222,22 @@ class MeetingResource extends Resource
                                 ->listWithLineBreaks()
                                 ->bulleted()
                                 ->columnSpanFull()
-                                ->formatStateUsing(fn(array $state) => implode(', ', $state))
-                                ->visible(fn(Meeting $record) => $record->guests),
+                                ->formatStateUsing(fn (array $state) => implode(', ', $state))
+                                ->visible(fn (Meeting $record) => $record->guests),
 
                             TextEntry::make('topics')
                                 ->label('Gündem Maddeleri')
                                 ->html()
                                 ->columnSpanFull()
-                                ->visible(fn(Meeting $record) => $record->topics),
+                                ->visible(fn (Meeting $record) => $record->topics),
 
                             TextEntry::make('decisions')
                                 ->label('Kararlar')
                                 ->html()
                                 ->columnSpanFull()
-                                ->visible(fn(Meeting $record) => $record->decisions),
+                                ->visible(fn (Meeting $record) => $record->decisions),
                         ])
-                            ->columns(4)
+                            ->columns(4),
                     ]),
                 ])
                     ->columnSpan(2),
@@ -262,7 +260,7 @@ class MeetingResource extends Resource
                         ->columnSpanFull()
                         ->heading('Kitap Bilgileri'),
                 ])
-                    ->columnSpan(1)
+                    ->columnSpan(1),
             ])
             ->columns(3);
     }
