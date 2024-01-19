@@ -39,6 +39,17 @@ class MeetingParticipantsChart extends ChartWidget
         ];
     }
 
+    public function getOptions(): array
+    {
+        return [
+            'scales' => [
+                'y' => [
+                    'max' => 10, // TODO: could be dynamic
+                ],
+            ],
+        ];
+    }
+
     protected function getType(): string
     {
         return 'bar';
