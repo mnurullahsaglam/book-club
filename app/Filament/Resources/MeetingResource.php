@@ -204,6 +204,7 @@ class MeetingResource extends Resource
                                 ->columnSpan(3),
 
                             TextEntry::make('date')
+                                ->formatStateUsing(fn($state) => $state->format('d/m/Y'))
                                 ->hiddenLabel()
                                 ->columnSpan(1)
                                 ->alignRight(),
