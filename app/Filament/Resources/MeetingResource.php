@@ -63,7 +63,7 @@ class MeetingResource extends Resource
                     ->required()
                     ->live()
                     ->afterStateUpdated(fn(Set $set, ?string $state) => $set('order', Meeting::whereHas('book', function ($query) use ($state) {
-                            $query->where('writer_id', Book::find(1)->writer_id);
+                            $query->where('writer_id', Book::find($state)->writer_id);
                         })
                             ->max('order') + 1)),
 
