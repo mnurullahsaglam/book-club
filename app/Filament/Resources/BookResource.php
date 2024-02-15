@@ -120,7 +120,7 @@ class BookResource extends Resource
                 TextColumn::make('reviews_avg_rating')
                     ->avg('reviews', 'rating')
                     ->label('Ortalama Puan')
-                    ->description(fn(Book $record) => $record->reviews()->entered()->count() . ' değerlendirme')
+                    ->description(fn (Book $record) => $record->reviews()->entered()->count().' değerlendirme')
                     ->numeric()
                     ->searchable(),
 
