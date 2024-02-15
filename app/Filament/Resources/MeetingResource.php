@@ -61,10 +61,10 @@ class MeetingResource extends Resource
                     ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->writer->name} - {$record->name}")
                     ->required()
                     ->live()
-                    ->afterStateUpdated(fn(Set $set, ?string $state) => $set('order', Meeting::whereHas('book', function ($query) use ($state) {
-                            $query->where('writer_id', Book::find($state)->writer_id);
-                        })
-                            ->max('order') + 1)),
+                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('order', Meeting::whereHas('book', function ($query) use ($state) {
+                        $query->where('writer_id', Book::find($state)->writer_id);
+                    })
+                        ->max('order') + 1)),
 
                 TextInput::make('order')
                     ->label('Sıra')
@@ -202,7 +202,7 @@ class MeetingResource extends Resource
                                 ->columnSpan(3),
 
                             TextEntry::make('date')
-                                ->formatStateUsing(fn($state) => $state->format('d/m/Y'))
+                                ->formatStateUsing(fn ($state) => $state->format('d/m/Y'))
                                 ->hiddenLabel()
                                 ->columnSpan(1)
                                 ->alignRight(),

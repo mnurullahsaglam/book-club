@@ -28,7 +28,8 @@ class Review extends Model
         return $this->belongsTo(Book::class);
     }
 
-    public function scopeEntered(Builder $query): Builder {
+    public function scopeEntered(Builder $query): Builder
+    {
         return $query->where('rating', '>', '0');
     }
 }
