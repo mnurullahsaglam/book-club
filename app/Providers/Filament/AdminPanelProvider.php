@@ -54,10 +54,10 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->plugins([
-                FilamentExceptionsPlugin::make()
+                FilamentExceptionsPlugin::make(),
             ])
             ->viteTheme([
-                'resources/css/filament/admin/theme.css'
+                'resources/css/filament/admin/theme.css',
             ]);
     }
 }

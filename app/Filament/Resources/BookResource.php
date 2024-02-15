@@ -134,7 +134,7 @@ class BookResource extends Resource
             ->actions([
                 ViewAction::make(),
                 EditAction::make(),
-                DeleteAction::make()
+                DeleteAction::make(),
             ])
             ->bulkActions([
                 DeleteBulkAction::make(),
@@ -165,7 +165,7 @@ class BookResource extends Resource
 
                         TextEntry::make('reviews.rating')
                             ->label('Ortalama Puan')
-                            ->formatStateUsing(fn(Book $record) => number_format($record->reviews()->whereNotNull('rating')->avg('rating'), 1, ','))
+                            ->formatStateUsing(fn (Book $record) => number_format($record->reviews()->whereNotNull('rating')->avg('rating'), 1, ','))
                             ->columnSpan(3),
                     ])
                         ->columns(6),
@@ -176,10 +176,10 @@ class BookResource extends Resource
                     Section::make([
                         ImageEntry::make('image')
                             ->label('Kapak Resmi')
-                            ->columnSpanFull()
-                    ])
+                            ->columnSpanFull(),
+                    ]),
                 ])
-                    ->columnSpan(1)
+                    ->columnSpan(1),
             ])
             ->columns(4);
     }

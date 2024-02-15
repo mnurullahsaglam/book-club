@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ReviewResource\Pages\EditReview;
 use App\Filament\Resources\ReviewResource\Pages\ListReviews;
-use App\Filament\Resources\ReviewResource\RelationManagers;
 use App\Models\Review;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
@@ -58,7 +57,7 @@ class ReviewResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn(Builder $query) => $query->where('user_id', auth()->id()))
+            ->modifyQueryUsing(fn (Builder $query) => $query->where('user_id', auth()->id()))
             ->columns([
                 TextColumn::make('book.name')
                     ->label('Kitap')
@@ -73,7 +72,7 @@ class ReviewResource extends Resource
                 //
             ])
             ->actions([
-                EditAction::make()
+                EditAction::make(),
             ])
             ->bulkActions([
                 DeleteBulkAction::make(),

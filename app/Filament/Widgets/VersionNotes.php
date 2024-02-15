@@ -10,7 +10,7 @@ class VersionNotes extends Widget
 
     protected static ?int $sort = 4;
 
-    protected int | string | array $columnSpan = 2;
+    protected int|string|array $columnSpan = 2;
 
     public string $label = 'Versiyon Notları';
 }

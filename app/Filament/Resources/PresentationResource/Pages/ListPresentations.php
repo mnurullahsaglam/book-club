@@ -17,7 +17,7 @@ class ListPresentations extends ListRecords
         return [
             'owner' => Tab::make()
                 ->badge(Presentation::owner()->count())
-                ->modifyQueryUsing(fn(Builder $query) => $query->owner())
+                ->modifyQueryUsing(fn (Builder $query) => $query->owner())
                 ->label('Sunumlarım'),
             'all' => Tab::make()
                 ->badge(Presentation::count())
