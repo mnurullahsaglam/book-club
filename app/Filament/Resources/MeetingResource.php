@@ -91,57 +91,57 @@ class MeetingResource extends Resource
 
                 Section::make('Gündem Maddeleri ve Kararlar')
                     ->schema([
-                    RichEditor::make('topics')
-                        ->label('Gündem Maddeleri'),
+                        RichEditor::make('topics')
+                            ->label('Gündem Maddeleri'),
 
-                    RichEditor::make('decisions')
-                        ->label('Kararlar'),
+                        RichEditor::make('decisions')
+                            ->label('Kararlar'),
                     ]),
 
                 Section::make('Katılımcılar')
                     ->schema([
-                    Repeater::make('meetingUsers')
-                        ->relationship('meetingUsers')
-                        ->hiddenLabel()
-                        ->schema([
-                            Hidden::make('user_id')
-                                ->default(fn (Get $get) => $get('user_id')),
+                        Repeater::make('meetingUsers')
+                            ->relationship('meetingUsers')
+                            ->hiddenLabel()
+                            ->schema([
+                                Hidden::make('user_id')
+                                    ->default(fn (Get $get) => $get('user_id')),
 
-                            Checkbox::make('is_participated')
-                                ->label(function (Get $get, $record) {
-                                    return $get('name') ?? $record->user->name;
-                                })
-                                ->inline()
-                                ->default(true)
-                                ->live(),
+                                Checkbox::make('is_participated')
+                                    ->label(function (Get $get, $record) {
+                                        return $get('name') ?? $record->user->name;
+                                    })
+                                    ->inline()
+                                    ->default(true)
+                                    ->live(),
 
-                            TextInput::make('reason_for_not_participating')
-                                ->hiddenLabel()
-                                ->placeholder('Katılmama sebebi')
-                                ->columnSpanFull()
-                                ->hidden(function (Get $get) {
-                                    return $get('is_participated');
-                                }),
-                        ])
-                        ->reorderable(false)
-                        ->deletable(false)
-                        ->addable(false)
-                        ->default(User::active()->get()->map(fn (User $user) => [
+                                TextInput::make('reason_for_not_participating')
+                                    ->hiddenLabel()
+                                    ->placeholder('Katılmama sebebi')
+                                    ->columnSpanFull()
+                                    ->hidden(function (Get $get) {
+                                        return $get('is_participated');
+                                    }),
+                            ])
+                            ->reorderable(false)
+                            ->deletable(false)
+                            ->addable(false)
+                            ->default(User::active()->get()->map(fn (User $user) => [
                                 'name' => $user->name,
                                 'user_id' => $user->id,
                                 'is_participated' => true,
                             ])->toArray()),
 
-                    Repeater::make('guests')
-                        ->label('Konuklar')
-                        ->schema([
+                        Repeater::make('guests')
+                            ->label('Konuklar')
+                            ->schema([
                                 TextInput::make('name')
-                                ->label('İsim')
-                                ->required()
-                                ->maxLength(255),
+                                    ->label('İsim')
+                                    ->required()
+                                    ->maxLength(255),
                             ])
-                        ->addActionLabel('Konuk ekle')
-                        ->defaultItems(0),
+                            ->addActionLabel('Konuk ekle')
+                            ->defaultItems(0),
                     ]),
             ]);
     }
@@ -183,7 +183,7 @@ class MeetingResource extends Resource
                         ->color('info')
                         ->icon('heroicon-o-document')
                         ->url(fn (Meeting $record) => route('meetings.export.pdf', $record), true),
-                ])
+                ]),
             ])
             ->bulkActions([
                 DeleteBulkAction::make(),
