@@ -149,7 +149,8 @@ class MeetingResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->defaultPaginationPageOption(25)
+             ->defaultPaginationPageOption(25)
+            ->defaultSort('date', 'desc')
             ->columns([
                 TextColumn::make('book.name')
                     ->label('Kitap')
