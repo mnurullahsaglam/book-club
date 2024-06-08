@@ -17,12 +17,12 @@ use Rappasoft\LaravelAuthenticationLog\Traits\AuthenticationLoggable;
 
 class User extends Authenticatable implements FilamentUser
 {
-    use HasApiTokens,
+    use AuthenticationLoggable,
+        HasApiTokens,
         HasFactory,
         Notifiable,
-        Slugger,
-        AuthenticationLoggable,
-        Notifiable;
+        Notifiable,
+        Slugger;
 
     /**
      * The attributes that are mass assignable.
