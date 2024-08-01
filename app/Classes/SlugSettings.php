@@ -10,7 +10,7 @@ final class SlugSettings
 
     public static function create(): SlugSettings
     {
-        return new SlugSettings();
+        return new SlugSettings;
     }
 
     public function setSlugSourceColumn(string $slugSourceColumn): self
