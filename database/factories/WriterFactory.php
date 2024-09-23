@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\Writer;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Carbon;
 
 class WriterFactory extends Factory{
     protected $model = Writer::class;
@@ -23,8 +22,8 @@ class WriterFactory extends Factory{
             'death_date' => $deathDate,
             'birth_place' => fake()->word(),
             'death_place' => fake()->word(),
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 }

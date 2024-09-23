@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\Publisher;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Carbon;
 
 class PublisherFactory extends Factory{
     protected $model = Publisher::class;
@@ -13,8 +12,9 @@ class PublisherFactory extends Factory{
     {
         return [
             'name' => fake()->name(),
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
+            'slug' => fake()->slug(),
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 }
