@@ -116,7 +116,7 @@ class WriterResource extends Resource
                             ->icon('heroicon-o-document-check')
                             ->iconColor('info');
                     })
-                    ->visible(fn(Writer $record) => $record->has('books')),
+                    ->visible(fn (Writer $record) => $record->has('books')),
                 EditAction::make(),
                 DeleteAction::make(),
             ])

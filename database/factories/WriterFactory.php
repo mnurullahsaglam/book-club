@@ -5,7 +5,8 @@ namespace Database\Factories;
 use App\Models\Writer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class WriterFactory extends Factory{
+class WriterFactory extends Factory
+{
     protected $model = Writer::class;
 
     public function definition(): array

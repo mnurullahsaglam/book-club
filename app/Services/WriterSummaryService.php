@@ -4,13 +4,11 @@ namespace App\Services;
 
 use App\Models\Writer;
 
-class WriterSummaryService {
-
+class WriterSummaryService
+{
     private array $summary;
 
-    public function __construct(protected Writer $writer)
-    {
-    }
+    public function __construct(protected Writer $writer) {}
 
     public function handle(): string
     {
@@ -85,7 +83,7 @@ class WriterSummaryService {
                         $guestCounts->put($name, $guestCounts->get($name, 0) + 1);
                         $totalGuests++;
                     } else {
-                        dump("Unexpected guest format: ", $guest);
+                        dump('Unexpected guest format: ', $guest);
                     }
                 }
             }
@@ -105,11 +103,11 @@ class WriterSummaryService {
     {
         $summaryText = $this->writer->personal_information_text;
 
-        $summaryText .= "İlk toplantı tarihi: " . $this->summary['first_meeting'] . "<br>";
-        $summaryText .= "Son toplantı tarihi: " . $this->summary['last_meeting'] . "<br>";
+        $summaryText .= 'İlk toplantı tarihi: '.$this->summary['first_meeting'].'<br>';
+        $summaryText .= 'Son toplantı tarihi: '.$this->summary['last_meeting'].'<br>';
 
-        $summaryText .= "Toplam toplantı sayısı: " . $this->summary['meetings_count'] . "<br>";
-        $summaryText .= "Toplam kitap sayısı: " . $this->summary['books_count'] . "<br>";
+        $summaryText .= 'Toplam toplantı sayısı: '.$this->summary['meetings_count'].'<br>';
+        $summaryText .= 'Toplam kitap sayısı: '.$this->summary['books_count'].'<br>';
 
         $summaryText .= "Mekanlar (" . $this->summary['locations_count'] . "): " . $this->summary['locations_text'] . "<br>";
         $summaryText .= "Misafirler (" . $this->summary['guests_count'] . "): " . $this->summary['guests_text'] . "<br>";
