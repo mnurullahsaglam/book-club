@@ -59,18 +59,18 @@ class Writer extends Model
     {
         return Attribute::make(
             get: function () {
-                $summaryText = "Yazarın adı: " . $this->name . "\n";
+                $summaryText = 'Yazarın adı: '.$this->name."\n";
 
                 if ($this->birth_place && $this->birth_date) {
-                    $summaryText .= "Yazarın doğum yeri ve tarihi: " . $this->birth_place . ", " . $this->birth_date . "\n";
+                    $summaryText .= 'Yazarın doğum yeri ve tarihi: '.$this->birth_place.', '.$this->birth_date."\n";
                 }
 
                 if ($this->death_place && $this->death_date) {
-                    $summaryText .= "Yazarın ölüm yeri ve tarihi: " . $this->death_place . ", " . $this->death_date . "\n";
+                    $summaryText .= 'Yazarın ölüm yeri ve tarihi: '.$this->death_place.', '.$this->death_date."\n";
                 }
 
                 if ($this->bio) {
-                    $summaryText .= "Yazarın biyografisi: " . $this->bio . "\n";
+                    $summaryText .= 'Yazarın biyografisi: '.$this->bio."\n";
                 }
             },
         );

@@ -13,9 +13,7 @@ class WriterSummaryNotification extends Notification
 {
     use Queueable;
 
-    public function __construct(private readonly Writer $writer)
-    {
-    }
+    public function __construct(private readonly Writer $writer) {}
 
     public function via(object $notifiable): array
     {
@@ -25,7 +23,7 @@ class WriterSummaryNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Yazar Özeti: ' . $this->writer->name)
+            ->subject('Yazar Özeti: '.$this->writer->name)
             ->greeting('Merhaba!')
             ->line('Yazarın özeti aşağıdaki gibidir.')
             ->line(new HtmlString((new WriterSummaryService($this->writer))->handle()))
