@@ -6,13 +6,16 @@ use App\Filament\Resources\WriterResource\Pages\CreateWriter;
 use App\Filament\Resources\WriterResource\Pages\EditWriter;
 use App\Filament\Resources\WriterResource\Pages\ListWriters;
 use App\Models\Writer;
+use App\Notifications\WriterSummaryNotification;
 use App\Tables\Columns\ProgressColumn;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
@@ -100,6 +103,20 @@ class WriterResource extends Resource
                 //
             ])
             ->actions([
+                Action::make('export')
+                    ->label('Özetini Çıkar')
+                    ->color('info')
+                    ->icon('heroicon-o-document')
+                    ->action(function (Writer $record) {
+                        auth()->user()->notify(new WriterSummaryNotification($record));
+
+                        Notification::make()
+                            ->title('Özet çıkarıldı')
+                            ->body('Yazarın özeti e-posta ile gönderildi.')
+                            ->icon('heroicon-o-document-check')
+                            ->iconColor('info');
+                    })
+                    ->visible(fn(Writer $record) => $record->has('books')),
                 EditAction::make(),
                 DeleteAction::make(),
             ])
