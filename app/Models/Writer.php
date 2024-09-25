@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Writer extends Model
 {
@@ -34,6 +35,11 @@ class Writer extends Model
         return $this->hasMany(Book::class);
     }
 
+    public function meetings(): HasManyThrough
+    {
+        return $this->hasManyThrough(Meeting::class, Book::class);
+    }
+
     public function readBooks(): HasMany
     {
         return $this->hasMany(Book::class)
@@ -44,8 +50,29 @@ class Writer extends Model
     {
         return Attribute::make(
             get: fn () => $this->books->count() > 0
-                ? $this->readBooks->count() / $this->books->count() * 100
+                ? number_format($this->readBooks->count() / $this->books->count() * 100, 2)
                 : null,
+        );
+    }
+
+    protected function personalInformationText(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $summaryText = "Yazarın adı: " . $this->name . "\n";
+
+                if ($this->birth_place && $this->birth_date) {
+                    $summaryText .= "Yazarın doğum yeri ve tarihi: " . $this->birth_place . ", " . $this->birth_date . "\n";
+                }
+
+                if ($this->death_place && $this->death_date) {
+                    $summaryText .= "Yazarın ölüm yeri ve tarihi: " . $this->death_place . ", " . $this->death_date . "\n";
+                }
+
+                if ($this->bio) {
+                    $summaryText .= "Yazarın biyografisi: " . $this->bio . "\n";
+                }
+            },
         );
     }
 
