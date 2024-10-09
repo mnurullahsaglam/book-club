@@ -109,9 +109,9 @@ class WriterSummaryService
         $summaryText .= 'Toplam toplantı sayısı: '.$this->summary['meetings_count'].'<br>';
         $summaryText .= 'Toplam kitap sayısı: '.$this->summary['books_count'].'<br>';
 
-        $summaryText .= "Mekanlar (" . $this->summary['locations_count'] . "): " . $this->summary['locations_text'] . "<br>";
-        $summaryText .= "Misafirler (" . $this->summary['guests_count'] . "): " . $this->summary['guests_text'] . "<br>";
-        $summaryText .= "Katılım Durumu: " . $this->summary['abstained_users'] . "<br>";
+        $summaryText .= 'Mekanlar ('.$this->summary['locations_count'].'): '.$this->summary['locations_text'].'<br>';
+        $summaryText .= 'Misafirler ('.$this->summary['guests_count'].'): '.$this->summary['guests_text'].'<br>';
+        $summaryText .= 'Katılım Durumu: '.$this->summary['abstained_users'].'<br>';
 
         return $summaryText;
     }
@@ -126,7 +126,7 @@ class WriterSummaryService
             // Loop through each user who abstained from this meeting
             foreach ($meeting->abstainedUsers as $user) {
                 // Initialize user data if not set
-                if (!isset($participationData[$user->id])) {
+                if (! isset($participationData[$user->id])) {
                     $participationData[$user->id] = [
                         'name' => $user->name,
                         'absence_count' => 0,
