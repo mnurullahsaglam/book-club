@@ -55,7 +55,7 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->plugins([
-                FilamentExceptionsPlugin::make(),
+                //FilamentExceptionsPlugin::make(),
                 FilamentAuthenticationLogPlugin::make(),
             ])
             ->viteTheme([
