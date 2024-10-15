@@ -60,7 +60,6 @@ class MeetingResource extends Resource
                     ->label('Kitap')
                     ->relationship('book', 'name')
                     ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->writer->name} - {$record->name}")
-                    ->required()
                     ->live()
                     ->afterStateUpdated(fn (Set $set, ?string $state) => $set('order', Meeting::whereHas('book', function ($query) use ($state) {
                         $query->where('writer_id', Book::find($state)->writer_id);
