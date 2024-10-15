@@ -38,6 +38,7 @@ class PresentationsRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('title')
+            ->searchable(false)
             ->columns([
                 TextColumn::make('title')
                     ->label('Başlık')
@@ -48,9 +49,6 @@ class PresentationsRelationManager extends RelationManager
                     ->label('Kişi')
                     ->searchable()
                     ->sortable(),
-            ])
-            ->filters([
-                //
             ])
             ->headerActions([
                 CreateAction::make(),
