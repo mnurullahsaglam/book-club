@@ -61,10 +61,14 @@ class MeetingResource extends Resource
                     ->relationship('book', 'name')
                     ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->writer->name} - {$record->name}")
                     ->live()
-                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('order', Meeting::whereHas('book', function ($query) use ($state) {
-                        $query->where('writer_id', Book::find($state)->writer_id);
-                    })
-                        ->max('order') + 1)),
+                    ->afterStateUpdated(function (Set $set, ?string $state) {
+                        $state ?
+                            $set('order', Meeting::whereHas('book', function ($query) use ($state) {
+                                $query->where('writer_id', Book::find($state)->writer_id);
+                            })
+                                ->max('order') + 1) :
+                            $set('order', 1);
+                    }),
 
                 TextInput::make('order')
                     ->label('Sıra')
