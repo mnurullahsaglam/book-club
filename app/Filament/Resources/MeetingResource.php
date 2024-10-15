@@ -176,7 +176,8 @@ class MeetingResource extends Resource
             ->actions([
                 ActionGroup::make([
                     ViewAction::make(),
-                    EditAction::make(),
+                    EditAction::make()
+                        ->color('warning'),
                     DeleteAction::make(),
                     Action::make('export')
                         ->label('PDF\'e Aktar')
