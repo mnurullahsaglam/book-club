@@ -110,7 +110,8 @@ class PresentationsRelationManager extends RelationManager
                         ->color('info')
                         ->url(fn ($record) => $record->file_url)
                         ->openUrlInNewTab(),
-                    EditAction::make(),
+                    EditAction::make()
+                        ->color('warning'),
                     DeleteAction::make(),
                 ]),
             ])
