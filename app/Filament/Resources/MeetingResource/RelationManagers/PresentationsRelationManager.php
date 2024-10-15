@@ -108,7 +108,7 @@ class PresentationsRelationManager extends RelationManager
                         ->label('Dosyayı görüntüle')
                         ->icon('heroicon-o-eye')
                         ->color('info')
-                        ->url(fn ($record) => $record->file_url)
+                        ->url(fn ($record) => route('presentation.download', $record))
                         ->openUrlInNewTab(),
                     EditAction::make(),
                     DeleteAction::make(),
