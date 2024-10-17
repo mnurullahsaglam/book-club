@@ -66,7 +66,8 @@ class AdditionalDocumentResource extends Resource
                     ->label('Dosyayı görüntüle')
                     ->icon('heroicon-o-eye')
                     ->color('info')
-                    ->url(fn ($record) => $record->file_url, true),
+                    ->url(fn ($record) => $record->file_url)
+                    ->openUrlInNewTab(),
                 EditAction::make(),
                 DeleteAction::make(),
             ])
