@@ -155,10 +155,9 @@ class MeetingResource extends Resource
             ->defaultPaginationPageOption(50)
             ->defaultSort('date', 'desc')
             ->columns([
-                TextColumn::make('book.name')
-                    ->label('Kitap')
-                    ->numeric()
-                    ->sortable(),
+                TextColumn::make('title')
+                    ->label('Başlık')
+                    ->searchable(),
 
                 TextColumn::make('date')
                     ->label('Tarih')
@@ -170,9 +169,9 @@ class MeetingResource extends Resource
                     ->numeric()
                     ->sortable(),
 
-                TextColumn::make('title')
-                    ->label('Başlık')
-                    ->searchable(),
+                TextColumn::make('book.name')
+                    ->label('Kitap')
+                    ->sortable(),
             ])
             ->filters([
                 //
