@@ -103,7 +103,7 @@ class WriterResource extends Resource
                 //
             ])
             ->actions([
-                Action::make('export')
+                Action::make('send-summary')
                     ->label('Özetini Çıkar')
                     ->color('info')
                     ->icon('heroicon-o-document')
@@ -114,7 +114,8 @@ class WriterResource extends Resource
                             ->title('Özet çıkarıldı')
                             ->body('Yazarın özeti e-posta ile gönderildi.')
                             ->icon('heroicon-o-document-check')
-                            ->iconColor('info');
+                            ->iconColor('info')
+                            ->send();
                     })
                     ->visible(fn (Writer $record) => $record->has('books')),
                 EditAction::make(),
