@@ -49,7 +49,8 @@ class Presentation extends Model
                         Action::make('view')
                             ->label('Görüntüle')
                             ->button()
-                            ->url($presentation->file_url, true)
+                            ->url($presentation->file_url)
+                            ->openUrlInNewTab()
                             ->visible(fn () => $presentation->file)
                             ->markAsRead(),
                     ])
