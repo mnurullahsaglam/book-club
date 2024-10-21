@@ -11,6 +11,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -91,26 +92,28 @@ class PresentationResource extends Resource
                 //
             ])
             ->actions([
-                Action::make('make_recommended')
-                    ->label('Önerilenlere Ekle')
-                    ->icon('heroicon-o-check')
-                    ->color('primary')
-                    ->visible(fn (Presentation $presentation) => ! $presentation->is_recommended && $presentation->user_id === auth()->id())
-                    ->action(fn (Presentation $presentation) => $presentation->update(['is_recommended' => true])),
+                ActionGroup::make([
+                    Action::make('make_recommended')
+                        ->label('Önerilenlere Ekle')
+                        ->icon('heroicon-o-check')
+                        ->color('primary')
+                        ->visible(fn (Presentation $presentation) => ! $presentation->is_recommended && $presentation->user_id === auth()->id())
+                        ->action(fn (Presentation $presentation) => $presentation->update(['is_recommended' => true])),
 
-                Action::make('make_unrecommended')
-                    ->label('Önerilenlerden Çıkar')
-                    ->icon('heroicon-o-x-mark')
-                    ->color('danger')
-                    ->visible(fn (Presentation $presentation) => $presentation->is_recommended && $presentation->user_id === auth()->id())
-                    ->action(fn (Presentation $presentation) => $presentation->update(['is_recommended' => false])),
+                    Action::make('make_unrecommended')
+                        ->label('Önerilenlerden Çıkar')
+                        ->icon('heroicon-o-x-mark')
+                        ->color('danger')
+                        ->visible(fn (Presentation $presentation) => $presentation->is_recommended && $presentation->user_id === auth()->id())
+                        ->action(fn (Presentation $presentation) => $presentation->update(['is_recommended' => false])),
 
-                Action::make('view')
-                    ->label('Dosyayı görüntüle')
-                    ->icon('heroicon-o-eye')
-                    ->color('info')
-                    ->url(fn ($record) => $record?->file_url)
-                    ->openUrlInNewTab(),
+                    Action::make('view')
+                        ->label('Dosyayı görüntüle')
+                        ->icon('heroicon-o-eye')
+                        ->color('info')
+                        ->url(fn ($record) => $record?->file_url)
+                        ->openUrlInNewTab(),
+                ])
             ]);
     }
 
