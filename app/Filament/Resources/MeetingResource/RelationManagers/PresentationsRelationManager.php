@@ -136,6 +136,11 @@ class PresentationsRelationManager extends RelationManager
                     ->maxLength(255)
                     ->columnSpanFull(),
 
+                TextInput::make('citation')
+                    ->label('Künye')
+                    ->maxLength(255)
+                    ->columnSpanFull(),
+
                 TextInput::make('author')
                     ->label('Müellif')
                     ->maxLength(255)

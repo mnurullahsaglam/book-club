@@ -51,6 +51,11 @@ class PresentationResource extends Resource
                     ->maxLength(255)
                     ->columnSpanFull(),
 
+                TextInput::make('Citation')
+                    ->label('Künye')
+                    ->maxLength(255)
+                    ->columnSpanFull(),
+
                 FileUpload::make('file')
                     ->label('Dosya')
                     ->required()

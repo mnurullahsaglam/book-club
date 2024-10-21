@@ -23,6 +23,7 @@ class Presentation extends Model
         'publication_year',
         'file',
         'description',
+        'citation',
         'is_recommended',
     ];
 
