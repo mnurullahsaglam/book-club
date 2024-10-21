@@ -80,7 +80,8 @@ class PresentationResource extends Resource
                 TextColumn::make('user.name')
                     ->label('Kişi')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->visible(fn ($livewire) => $livewire->activeTab === 'all'),
 
                 IconColumn::make('is_recommended')
                     ->label('Öneriliyor mu?')
