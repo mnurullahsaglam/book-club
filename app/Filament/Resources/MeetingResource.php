@@ -35,6 +35,7 @@ use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 
@@ -174,7 +175,27 @@ class MeetingResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                //
+                Filter::make('date_range')
+                    ->form([
+                        DatePicker::make('from')
+                            ->label('Tarihinden'),
+                        DatePicker::make('to')
+                            ->label('Tarihine'),
+                    ])
+                    ->query(function ($query, array $data) {
+                        return $query->when($data['from'], function ($query) use ($data) {
+                            $query->whereDate('date', '>=', $data['from']);
+                        })->when($data['to'], function ($query) use ($data) {
+                            $query->whereDate('date', '<=', $data['to']);
+                        });
+                    })
+                    ->indicateUsing(function (array $data) {
+                        if (!$data['from'] && !$data['to']) {
+                            return null;
+                        }
+
+                        return 'Tarih Aralığı: ' . ($data['from'] ?? '...') . ' - ' . ($data['to'] ?? '...');
+                    }),
             ])
             ->actions([
                 ActionGroup::make([
