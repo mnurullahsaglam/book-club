@@ -8,6 +8,7 @@ use App\Filament\Resources\WriterResource\Pages\ListWriters;
 use App\Models\Writer;
 use App\Notifications\WriterSummaryNotification;
 use App\Tables\Columns\ProgressColumn;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
@@ -21,7 +22,9 @@ use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Database\Query\Builder;
 
 class WriterResource extends Resource
 {
@@ -100,7 +103,67 @@ class WriterResource extends Resource
                     }),
             ])
             ->filters([
-                //
+                Filter::make('birth_date_range')
+                    ->form([
+                        DatePicker::make('from')
+                            ->label('Doğum Tarihi Başlangıcı'),
+                        DatePicker::make('to')
+                            ->label('Doğum Tarihi Bitişi'),
+                    ])
+                    ->query(function ($query, array $data) {
+                        return $query->when($data['from'], function ($query) use ($data) {
+                            $query->whereDate('birth_date', '>=', $data['from']);
+                        })->when($data['to'], function ($query) use ($data) {
+                            $query->whereDate('birth_date', '<=', $data['to']);
+                        });
+                    })
+                    ->indicateUsing(function (array $data) {
+                        if (!$data['from'] && !$data['to']) {
+                            return null;
+                        }
+
+                        return 'Doğum Tarihi Aralığı: ' . ($data['from'] ?? '...') . ' - ' . ($data['to'] ?? '...');
+                    }),
+
+                Filter::make('death_date_range')
+                    ->form([
+                        DatePicker::make('from')
+                            ->label('Ölüm Tarihi Başlangıcı'),
+                        DatePicker::make('to')
+                            ->label('Ölüm Tarihi Bitişi'),
+                    ])
+                    ->query(function ($query, array $data) {
+                        return $query->when($data['from'], function ($query) use ($data) {
+                            $query->whereDate('death_date', '>=', $data['from']);
+                        })->when($data['to'], function ($query) use ($data) {
+                            $query->whereDate('death_date', '<=', $data['to']);
+                        });
+                    })
+                    ->indicateUsing(function (array $data) {
+                        if (!$data['from'] && !$data['to']) {
+                            return null;
+                        }
+
+                        return 'Ölüm Tarihi Aralığı: ' . ($data['from'] ?? '...') . ' - ' . ($data['to'] ?? '...');
+                    }),
+
+                Filter::make('finished')
+                    ->form([
+                        Checkbox::make('is_finished')
+                            ->label('Bitti mi?'),
+                    ])
+                    ->query(function ($query, array $data) {
+                        return $query->when($data['is_finished'], function (Builder $query) use ($data) {
+                            $query->where('is_finished', $data['is_finished']);
+                        });
+                    })
+                    ->indicateUsing(function (array $data) {
+                        if (!$data['is_finished']) {
+                            return null;
+                        }
+
+                        return 'Kitapları Bitenler';
+                    }),
             ])
             ->actions([
                 Action::make('send-summary')
