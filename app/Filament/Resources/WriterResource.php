@@ -118,11 +118,11 @@ class WriterResource extends Resource
                         });
                     })
                     ->indicateUsing(function (array $data) {
-                        if (!$data['from'] && !$data['to']) {
+                        if (! $data['from'] && ! $data['to']) {
                             return null;
                         }
 
-                        return 'Doğum Tarihi Aralığı: ' . ($data['from'] ?? '...') . ' - ' . ($data['to'] ?? '...');
+                        return 'Doğum Tarihi Aralığı: '.($data['from'] ?? '...').' - '.($data['to'] ?? '...');
                     }),
 
                 Filter::make('death_date_range')
@@ -140,11 +140,11 @@ class WriterResource extends Resource
                         });
                     })
                     ->indicateUsing(function (array $data) {
-                        if (!$data['from'] && !$data['to']) {
+                        if (! $data['from'] && ! $data['to']) {
                             return null;
                         }
 
-                        return 'Ölüm Tarihi Aralığı: ' . ($data['from'] ?? '...') . ' - ' . ($data['to'] ?? '...');
+                        return 'Ölüm Tarihi Aralığı: '.($data['from'] ?? '...').' - '.($data['to'] ?? '...');
                     }),
 
                 Filter::make('finished')
@@ -158,7 +158,7 @@ class WriterResource extends Resource
                         });
                     })
                     ->indicateUsing(function (array $data) {
-                        if (!$data['is_finished']) {
+                        if (! $data['is_finished']) {
                             return null;
                         }
 

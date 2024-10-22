@@ -190,11 +190,11 @@ class MeetingResource extends Resource
                         });
                     })
                     ->indicateUsing(function (array $data) {
-                        if (!$data['from'] && !$data['to']) {
+                        if (! $data['from'] && ! $data['to']) {
                             return null;
                         }
 
-                        return 'Tarih Aralığı: ' . ($data['from'] ?? '...') . ' - ' . ($data['to'] ?? '...');
+                        return 'Tarih Aralığı: '.($data['from'] ?? '...').' - '.($data['to'] ?? '...');
                     }),
             ])
             ->actions([

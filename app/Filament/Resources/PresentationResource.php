@@ -113,7 +113,7 @@ class PresentationResource extends Resource
                         ->color('info')
                         ->url(fn ($record) => $record?->file_url)
                         ->openUrlInNewTab(),
-                ])
+                ]),
             ]);
     }
 
