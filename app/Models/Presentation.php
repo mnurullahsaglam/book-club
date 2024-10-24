@@ -86,8 +86,30 @@ class Presentation extends Model
         );
     }
 
+    protected function citation(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->citation ?? $this->generateCitation(),
+        );
+    }
+
     public function scopeOwner(Builder $query): Builder
     {
         return $query->where('user_id', auth()->id());
+    }
+
+    private function generateCitation()
+    {
+        $citation = $this->title;
+
+        if ($this->author) {
+            $citation .= ', <i>' . $this->author . '</i>';
+        }
+
+        if ($this->publication_year) {
+            $citation .= ', ' . $this->publication_year;
+        }
+
+        return $citation;
     }
 }
