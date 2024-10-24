@@ -175,14 +175,14 @@ class WriterSummaryService
             return collect($meeting->presentations ?? [])
                 ->filter()
                 ->map(function ($presentation) {
-                    $item = '- ' . $presentation->title;
+                    $item = '- '.$presentation->title;
 
                     if ($presentation->author) {
-                        $item .= ', <i>' . $presentation->author . '</i>';
+                        $item .= ', <i>'.$presentation->author.'</i>';
                     }
 
                     if ($presentation->publication_year) {
-                        $item .= ', ' . $presentation->publication_year;
+                        $item .= ', '.$presentation->publication_year;
                     }
 
                     return $item;
