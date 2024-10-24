@@ -20,6 +20,7 @@ class WriterSummaryService
         $this->setLocationStats();
         $this->setAbstainedUserStats();
         $this->setGuestStats();
+        $this->setPresentationList();
 
         return $this->generateSummaryText();
     }
@@ -82,8 +83,6 @@ class WriterSummaryService
                         $name = $guest['name'];
                         $guestCounts->put($name, $guestCounts->get($name, 0) + 1);
                         $totalGuests++;
-                    } else {
-                        dump('Unexpected guest format: ', $guest);
                     }
                 }
             }
@@ -112,6 +111,8 @@ class WriterSummaryService
         $summaryText .= 'Mekanlar ('.$this->summary['locations_count'].'): '.$this->summary['locations_text'].'<br>';
         $summaryText .= 'Misafirler ('.$this->summary['guests_count'].'): '.$this->summary['guests_text'].'<br>';
         $summaryText .= 'Katılım Durumu: '.$this->summary['abstained_users'].'<br>';
+
+        $summaryText .= 'Sunumlar: <br>'.$this->summary['presentation_list']->implode('<br>');
 
         return $summaryText;
     }
@@ -166,5 +167,28 @@ class WriterSummaryService
         }
 
         $this->summary['abstained_users'] = $abstainedText;
+    }
+
+    private function setPresentationList(): void
+    {
+        $presentationList = $this->writer->meetings->flatMap(function ($meeting) {
+            return collect($meeting->presentations ?? [])
+                ->filter()
+                ->map(function ($presentation) {
+                    $item = '- ' . $presentation->title;
+
+                    if ($presentation->author) {
+                        $item .= ', <i>' . $presentation->author . '</i>';
+                    }
+
+                    if ($presentation->publication_year) {
+                        $item .= ', ' . $presentation->publication_year;
+                    }
+
+                    return $item;
+                });
+        });
+
+        $this->summary['presentation_list'] = $presentationList;
     }
 }
