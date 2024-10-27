@@ -70,7 +70,7 @@ class MeetingResource extends Resource
                     ])
                     ->extraAttributes([
                         'class' => 'border-none px-0 py-1',
-                        ])
+                    ])
                     ->columns()
                     ->columnSpanFull()
                     ->searchable()
