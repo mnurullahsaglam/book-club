@@ -89,7 +89,7 @@ class Presentation extends Model
     protected function citation(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->citation ?? $this->generateCitation(),
+            get: fn () => $this->citation ?? $this->generateCitation(),
         );
     }
 
@@ -103,11 +103,11 @@ class Presentation extends Model
         $citation = $this->title;
 
         if ($this->author) {
-            $citation .= ', <i>' . $this->author . '</i>';
+            $citation .= ', <i>'.$this->author.'</i>';
         }
 
         if ($this->publication_year) {
-            $citation .= ', ' . $this->publication_year;
+            $citation .= ', '.$this->publication_year;
         }
 
         return $citation;
