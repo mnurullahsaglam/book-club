@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Writer extends Model
 {
@@ -30,14 +31,14 @@ class Writer extends Model
         'is_finished' => 'boolean',
     ];
 
+    public function meetings(): MorphMany
+    {
+        return $this->morphMany(Meeting::class, 'meetable');
+    }
+
     public function books(): HasMany
     {
         return $this->hasMany(Book::class);
-    }
-
-    public function meetings(): HasManyThrough
-    {
-        return $this->hasManyThrough(Meeting::class, Book::class);
     }
 
     public function readBooks(): HasMany

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Book extends Model
 {
@@ -41,9 +42,9 @@ class Book extends Model
         return $this->belongsTo(Publisher::class);
     }
 
-    public function meetings(): HasMany
+    public function meetings(): MorphMany
     {
-        return $this->hasMany(Meeting::class);
+        return $this->morphMany(Meeting::class, 'meetable');
     }
 
     public function reviews(): HasMany

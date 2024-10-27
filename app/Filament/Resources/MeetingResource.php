@@ -10,13 +10,14 @@ use App\Filament\Resources\MeetingResource\RelationManagers\PresentationsRelatio
 use App\Models\Book;
 use App\Models\Meeting;
 use App\Models\User;
+use App\Models\Writer;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\MorphToSelect;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -37,7 +38,7 @@ use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Database\Query\Builder;
 
 class MeetingResource extends Resource
 {
@@ -57,30 +58,60 @@ class MeetingResource extends Resource
     {
         return $form
             ->schema([
-                Select::make('book_id')
-                    ->label('Kitap')
-                    ->relationship('book', 'name')
-                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->writer->name} - {$record->name}")
+                MorphToSelect::make('meetable')
+                    ->label('Kitap/Yazar')
+                    ->types([
+                        MorphToSelect\Type::make(Book::class)
+                            ->titleAttribute('name')
+                            ->label('Kitap'),
+                        MorphToSelect\Type::make(Writer::class)
+                            ->titleAttribute('name')
+                            ->label('Yazar'),
+                    ])
+                    ->extraAttributes([
+                        'class' => 'border-none px-0 py-1',
+                        ])
+                    ->columns()
+                    ->columnSpanFull()
+                    ->searchable()
+                    ->preload()
                     ->live()
-                    ->afterStateUpdated(function (Set $set, ?string $state) {
-                        $state ?
-                            $set('order', Meeting::whereHas('book', function ($query) use ($state) {
-                                $query->where('writer_id', Book::find($state)->writer_id);
-                            })
-                                ->max('order') + 1) :
+                    ->afterStateUpdated(function (Set $set, ?array $state) {
+                        if (is_array($state) && isset($state['meetable_id'])) {
+                            $writerId = $state['meetable_id'];
+
+                            if ($state['meetable_type'] === Book::class) {
+                                $writerId = Book::find($state['meetable_id'])->writer_id;
+                            }
+
+                            $meetingCount = Meeting::whereHasMorph(
+                                'meetable',
+                                [Book::class, Writer::class],
+                                function (Builder $query, string $type) use ($writerId) {
+                                    $column = $type === Book::class ? 'writer_id' : 'id';
+
+                                    $query->where($column, $writerId);
+                                }
+                            )
+                                ->count();
+
+                            $set('order', $meetingCount + 1);
+                        } else {
                             $set('order', 1);
-                    }),
+                        }
+                    })
+                    ->required(),
+
+                TextInput::make('title')
+                    ->label('Başlık')
+                    ->required()
+                    ->maxLength(255),
 
                 TextInput::make('order')
                     ->label('Sıra')
                     ->required()
                     ->numeric()
                     ->minValue(1),
-
-                TextInput::make('title')
-                    ->label('Başlık')
-                    ->required()
-                    ->maxLength(255),
 
                 TextInput::make('location')
                     ->label('Mekân')

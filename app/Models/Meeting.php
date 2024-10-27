@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Meeting extends Model
 {
@@ -29,6 +30,11 @@ class Meeting extends Model
         'guests' => 'array',
         'date' => 'date',
     ];
+
+    public function meetable(): MorphTo
+    {
+        return $this->morphTo();
+    }
 
     public function book(): BelongsTo
     {
