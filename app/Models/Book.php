@@ -21,6 +21,7 @@ class Book extends Model
         'publisher_id',
         'image',
         'name',
+        'original_name',
         'slug',
         'page_count',
         'is_finished',
