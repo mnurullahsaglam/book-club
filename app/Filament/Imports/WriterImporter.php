@@ -49,22 +49,22 @@ class WriterImporter extends Importer
 
     public function resolveRecord(): ?Writer
     {
-         return Writer::firstOrNew([
-             'name' => $this->data['name'],
-             'bio' => $this->data['bio'],
-             'birth_date' => $this->data['birth_date'],
-             'death_date' => $this->data['death_date'],
-             'birth_place' => $this->data['birth_place'],
-             'death_place' => $this->data['death_place'],
-         ]);
+        return Writer::firstOrNew([
+            'name' => $this->data['name'],
+            'bio' => $this->data['bio'],
+            'birth_date' => $this->data['birth_date'],
+            'death_date' => $this->data['death_date'],
+            'birth_place' => $this->data['birth_place'],
+            'death_place' => $this->data['death_place'],
+        ]);
     }
 
     public static function getCompletedNotificationBody(Import $import): string
     {
-        $body = 'İçeri aktarım tamamladndı. ' . number_format($import->successful_rows) . ' yazar eklendi.';
+        $body = 'İçeri aktarım tamamladndı. '.number_format($import->successful_rows).' yazar eklendi.';
 
         if ($failedRowsCount = $import->getFailedRowsCount()) {
-            $body .= ' ' . number_format($failedRowsCount) . ' yazar içeri aktarılamadı.';
+            $body .= ' '.number_format($failedRowsCount).' yazar içeri aktarılamadı.';
         }
 
         return $body;
