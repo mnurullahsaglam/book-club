@@ -144,7 +144,7 @@ class BookResource extends Resource
                 DeleteBulkAction::make(),
                 ExportBulkAction::make()
                     ->exporter(BookExporter::class)
-                    ->fileName(fn (Export $export): string => "Okuma Grubu Kitap Listesi")
+                    ->fileName(fn (Export $export): string => 'Okuma Grubu Kitap Listesi')
                     ->label('Dışa Aktar: Kitaplar'),
             ]);
     }

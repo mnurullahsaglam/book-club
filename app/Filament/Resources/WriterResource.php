@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Exports\BookExporter;
 use App\Filament\Exports\WriterExporter;
 use App\Filament\Resources\WriterResource\Pages\CreateWriter;
 use App\Filament\Resources\WriterResource\Pages\EditWriter;
@@ -193,7 +192,7 @@ class WriterResource extends Resource
                 DeleteBulkAction::make(),
                 ExportBulkAction::make()
                     ->exporter(WriterExporter::class)
-                    ->fileName(fn (Export $export): string => "Okuma Grubu Yazar Listesi")
+                    ->fileName(fn (Export $export): string => 'Okuma Grubu Yazar Listesi')
                     ->label('Dışa Aktar: Yazarlar'),
             ]);
     }
