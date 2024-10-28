@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Filament\Actions\CreateAction;
+use Filament\Actions\ExportAction;
 use Filament\Actions\ImportAction;
 use Illuminate\Support\ServiceProvider;
 
@@ -26,7 +27,15 @@ class AppServiceProvider extends ServiceProvider
         });
 
         ImportAction::configureUsing(function (ImportAction $action) {
-            $action->icon('heroicon-o-document-arrow-up');
+            $action
+                ->color('info')
+                ->icon('heroicon-o-document-arrow-up');
+        });
+
+        ExportAction::configureUsing(function (ExportAction $action) {
+            $action
+                ->color('primary')
+                ->icon('heroicon-o-document-arrow-down');
         });
     }
 }

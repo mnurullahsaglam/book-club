@@ -2,9 +2,12 @@
 
 namespace App\Filament\Resources\WriterResource\Pages;
 
+use App\Filament\Exports\WriterExporter;
 use App\Filament\Imports\WriterImporter;
 use App\Filament\Resources\WriterResource;
 use Filament\Actions;
+use Filament\Actions\ExportAction;
+use Filament\Actions\Exports\Models\Export;
 use Filament\Actions\ImportAction;
 use Filament\Resources\Pages\ListRecords;
 
@@ -18,6 +21,10 @@ class ListWriters extends ListRecords
             ImportAction::make()
                 ->importer(WriterImporter::class)
                 ->label('İçe Aktar: Yazarlar'),
+            ExportAction::make()
+                ->exporter(WriterExporter::class)
+                ->fileName(fn (Export $export): string => "Okuma Grubu Yazar Listesi")
+                ->label('Dışa Aktar: Yazarlar'),
             Actions\CreateAction::make(),
         ];
     }
