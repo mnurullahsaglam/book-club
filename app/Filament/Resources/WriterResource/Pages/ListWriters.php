@@ -2,8 +2,10 @@
 
 namespace App\Filament\Resources\WriterResource\Pages;
 
+use App\Filament\Imports\WriterImporter;
 use App\Filament\Resources\WriterResource;
 use Filament\Actions;
+use Filament\Actions\ImportAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListWriters extends ListRecords
@@ -13,6 +15,9 @@ class ListWriters extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            ImportAction::make()
+                ->importer(WriterImporter::class)
+                ->label('İçe Aktar: Yazarlar'),
             Actions\CreateAction::make(),
         ];
     }
