@@ -23,7 +23,7 @@ class ListWriters extends ListRecords
                 ->label('İçe Aktar: Yazarlar'),
             ExportAction::make()
                 ->exporter(WriterExporter::class)
-                ->fileName(fn (Export $export): string => "Okuma Grubu Yazar Listesi")
+                ->fileName(fn (Export $export): string => 'Okuma Grubu Yazar Listesi')
                 ->label('Dışa Aktar: Yazarlar'),
             Actions\CreateAction::make(),
         ];

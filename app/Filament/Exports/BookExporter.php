@@ -38,10 +38,10 @@ class BookExporter extends Exporter
 
     public static function getCompletedNotificationBody(Export $export): string
     {
-        $body = 'Kitapların dışarı aktarılması tamamlandı. ' . number_format($export->successful_rows) . ' kitap dışarı aktarıldı.';
+        $body = 'Kitapların dışarı aktarılması tamamlandı. '.number_format($export->successful_rows).' kitap dışarı aktarıldı.';
 
         if ($failedRowsCount = $export->getFailedRowsCount()) {
-            $body .= ' ' . number_format($failedRowsCount) . ' kitap dışarı aktarılamadı.';
+            $body .= ' '.number_format($failedRowsCount).' kitap dışarı aktarılamadı.';
         }
 
         return $body;

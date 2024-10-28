@@ -37,10 +37,10 @@ class WriterExporter extends Exporter
 
     public static function getCompletedNotificationBody(Export $export): string
     {
-        $body = 'Yazarların dışarı aktarılması tamamlandı. ' . number_format($export->successful_rows) . ' yazar dışarı aktarıldı.';
+        $body = 'Yazarların dışarı aktarılması tamamlandı. '.number_format($export->successful_rows).' yazar dışarı aktarıldı.';
 
         if ($failedRowsCount = $export->getFailedRowsCount()) {
-            $body .= ' ' . number_format($failedRowsCount) . ' yazar dışarı aktarılamadı.';
+            $body .= ' '.number_format($failedRowsCount).' yazar dışarı aktarılamadı.';
         }
 
         return $body;
@@ -48,7 +48,7 @@ class WriterExporter extends Exporter
 
     public function getXlsxHeaderCellStyle(): ?Style
     {
-        return (new Style())
+        return (new Style)
             ->setFontBold()
             ->setFontUnderline();
     }

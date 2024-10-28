@@ -23,7 +23,7 @@ class ListBooks extends ListRecords
                 ->label('İçe Aktar: Kitaplar'),
             ExportAction::make()
                 ->exporter(BookExporter::class)
-                ->fileName(fn (Export $export): string => "Okuma Grubu Kitap Listesi")
+                ->fileName(fn (Export $export): string => 'Okuma Grubu Kitap Listesi')
                 ->label('Dışa Aktar: Kitaplar'),
             Actions\CreateAction::make(),
         ];
