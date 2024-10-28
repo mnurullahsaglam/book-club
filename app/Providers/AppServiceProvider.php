@@ -5,6 +5,7 @@ namespace App\Providers;
 use Filament\Actions\CreateAction;
 use Filament\Actions\ExportAction;
 use Filament\Actions\ImportAction;
+use Filament\Tables\Actions\ExportBulkAction;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -33,6 +34,12 @@ class AppServiceProvider extends ServiceProvider
         });
 
         ExportAction::configureUsing(function (ExportAction $action) {
+            $action
+                ->color('primary')
+                ->icon('heroicon-o-document-arrow-down');
+        });
+
+        ExportBulkAction::configureUsing(function (ExportBulkAction $action) {
             $action
                 ->color('primary')
                 ->icon('heroicon-o-document-arrow-down');
