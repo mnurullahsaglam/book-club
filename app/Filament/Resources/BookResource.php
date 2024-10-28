@@ -2,12 +2,13 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Imports\BookImporter;
+use App\Filament\Exports\BookExporter;
 use App\Filament\Resources\BookResource\Pages\CreateBook;
 use App\Filament\Resources\BookResource\Pages\EditBook;
 use App\Filament\Resources\BookResource\Pages\ListBooks;
 use App\Filament\Resources\BookResource\Pages\ViewBook;
 use App\Models\Book;
+use Filament\Actions\Exports\Models\Export;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -22,7 +23,7 @@ use Filament\Resources\Resource;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\ImportAction;
+use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
@@ -140,6 +141,10 @@ class BookResource extends Resource
             ])
             ->bulkActions([
                 DeleteBulkAction::make(),
+                ExportBulkAction::make()
+                    ->exporter(BookExporter::class)
+                    ->fileName(fn (Export $export): string => "Okuma Grubu Kitap Listesi")
+                    ->label('Dışa Aktar: Kitaplar'),
             ]);
     }
 

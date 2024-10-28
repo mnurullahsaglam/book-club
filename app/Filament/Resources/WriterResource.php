@@ -2,12 +2,15 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Exports\BookExporter;
+use App\Filament\Exports\WriterExporter;
 use App\Filament\Resources\WriterResource\Pages\CreateWriter;
 use App\Filament\Resources\WriterResource\Pages\EditWriter;
 use App\Filament\Resources\WriterResource\Pages\ListWriters;
 use App\Models\Writer;
 use App\Notifications\WriterSummaryNotification;
 use App\Tables\Columns\ProgressColumn;
+use Filament\Actions\Exports\Models\Export;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
@@ -20,6 +23,7 @@ use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\Filter;
@@ -186,6 +190,10 @@ class WriterResource extends Resource
             ])
             ->bulkActions([
                 DeleteBulkAction::make(),
+                ExportBulkAction::make()
+                    ->exporter(WriterExporter::class)
+                    ->fileName(fn (Export $export): string => "Okuma Grubu Yazar Listesi")
+                    ->label('Dışa Aktar: Yazarlar'),
             ]);
     }
 
