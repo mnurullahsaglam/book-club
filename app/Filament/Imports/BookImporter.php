@@ -59,7 +59,7 @@ class BookImporter extends Importer
             ImportColumn::make('publication_date')
                 ->label('Yayın Tarihi')
                 ->numeric()
-                ->rules(['nullable', 'date'])
+                ->rules(['nullable', 'date_format:Y'])
                 ->exampleHeader('Yayın Tarihi'),
 
             ImportColumn::make('publication_location')
