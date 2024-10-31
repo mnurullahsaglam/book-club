@@ -109,11 +109,13 @@ class BookResource extends Resource
             ->columns([
                 TextColumn::make('name')
                     ->label('İsim')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
 
                 TextColumn::make('writer.name')
                     ->label('Yazar')
                     ->numeric()
+                    ->searchable()
                     ->sortable(),
 
                 TextColumn::make('publisher.name')
@@ -126,7 +128,7 @@ class BookResource extends Resource
                     ->label('Ortalama Puan')
                     ->description(fn (Book $record) => $record->reviews()->entered()->count().' değerlendirme')
                     ->numeric()
-                    ->searchable(),
+                    ->sortable(),
 
                 ToggleColumn::make('is_finished')
                     ->label('Okundu mu?')
