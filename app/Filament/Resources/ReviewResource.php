@@ -90,7 +90,6 @@ class ReviewResource extends Resource
     {
         return [
             'index' => ListReviews::route('/'),
-            'edit' => EditReview::route('/{record}/edit'),
         ];
     }
 
