@@ -159,11 +159,11 @@ class BookResource extends Resource
                     Section::make([
                         TextEntry::make('name')
                             ->label('Kitap')
-                            ->columnSpan(2),
+                            ->columnSpan(3),
 
                         TextEntry::make('writer.name')
                             ->label('Yazar')
-                            ->columnSpan(2),
+                            ->columnSpan(3),
 
                         TextEntry::make('publisher.name')
                             ->label('Yayınevi')
@@ -171,16 +171,16 @@ class BookResource extends Resource
 
                         TextEntry::make('page_count')
                             ->label('Sayfa Sayısı')
-                            ->columnSpan(3),
+                            ->columnSpan(2),
 
                         TextEntry::make('reviews.rating')
                             ->label('Ortalama Puan')
                             ->formatStateUsing(fn (Book $record) => number_format($record->reviews()->whereNotNull('rating')->avg('rating'), 1, ','))
-                            ->columnSpan(3),
+                            ->columnSpan(2),
                     ])
                         ->columns(6),
                 ])
-                    ->columnSpan(3),
+                    ->columnSpan(4),
 
                 Group::make([
                     Section::make([
@@ -191,7 +191,7 @@ class BookResource extends Resource
                 ])
                     ->columnSpan(1),
             ])
-            ->columns(4);
+            ->columns(5);
     }
 
     public static function getRelations(): array
