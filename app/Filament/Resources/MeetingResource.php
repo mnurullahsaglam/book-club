@@ -201,8 +201,8 @@ class MeetingResource extends Resource
                     ->numeric()
                     ->sortable(),
 
-                TextColumn::make('book.name')
-                    ->label('Kitap')
+                TextColumn::make('meetable.name')
+                    ->label('Kitap/Yazar')
                     ->sortable(),
             ])
             ->filters([
