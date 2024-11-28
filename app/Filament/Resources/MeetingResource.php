@@ -296,29 +296,38 @@ class MeetingResource extends Resource
                                 ->html()
                                 ->columnSpanFull()
                                 ->visible(fn (Meeting $record) => $record->decisions),
+
+                            TextEntry::make('presentations')
+                                ->label('Sunumlar')
+                                ->html()
+                                ->columnSpanFull()
+                                ->visible(fn (Meeting $record) => $record->decisions),
                         ])
                             ->columns(4),
-                    ]),
+                    ])
+                    ->heading('Toplantı Bilgileri'),
                 ])
                     ->columnSpan(2),
 
                 Group::make([
                     \Filament\Infolists\Components\Section::make([
-                        ImageEntry::make('book.image')
+                        ImageEntry::make('meetable.image')
                             ->hiddenLabel(),
 
-                        TextEntry::make('book.name')
+                        TextEntry::make('meetable.name')
                             ->hiddenLabel(),
 
-                        TextEntry::make('book.writer.name')
+                        TextEntry::make('meetable.writer.name')
+                            ->visible(fn($record) => $record->meetable_type === Book::class)
                             ->hiddenLabel(),
 
-                        TextEntry::make('book.publisher.name')
+                        TextEntry::make('meetable.publisher.name')
+                            ->visible(fn($record) => $record->meetable_type === Book::class)
                             ->hiddenLabel(),
 
                     ])
                         ->columnSpanFull()
-                        ->heading('Kitap Bilgileri'),
+                        ->heading('Kitap/Yazar Bilgileri'),
                 ])
                     ->columnSpan(1),
             ])
