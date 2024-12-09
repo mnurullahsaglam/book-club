@@ -36,7 +36,7 @@ class Presentation extends Model
         parent::boot();
 
         static::created(function (Presentation $presentation) {
-            $user = User::find($presentation->user_id);
+            $user = $presentation->user;
 
             $notificationText = "{$presentation->meeting->date->format('d/m/Y')} tarihindeki toplantı için sunumunuz sisteme yüklendi.";
 
