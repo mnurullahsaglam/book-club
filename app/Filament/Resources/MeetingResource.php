@@ -308,7 +308,7 @@ class MeetingResource extends Resource
                         ])
                             ->columns(4),
                     ])
-                    ->heading('Toplantı Bilgileri'),
+                        ->heading('Toplantı Bilgileri'),
                 ])
                     ->columnSpan(2),
 
@@ -321,11 +321,11 @@ class MeetingResource extends Resource
                             ->hiddenLabel(),
 
                         TextEntry::make('meetable.writer.name')
-                            ->visible(fn($record) => $record->meetable_type === Book::class)
+                            ->visible(fn ($record) => $record->meetable_type === Book::class)
                             ->hiddenLabel(),
 
                         TextEntry::make('meetable.publisher.name')
-                            ->visible(fn($record) => $record->meetable_type === Book::class)
+                            ->visible(fn ($record) => $record->meetable_type === Book::class)
                             ->hiddenLabel(),
 
                     ])
