@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\Slugger;
 use Filament\Notifications\Notification;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -58,6 +59,11 @@ class Book extends Model
         return Attribute::make(
             get: fn () => asset('uploads/'.$this->image),
         );
+    }
+
+    public function scopeFinished(Builder $query): Builder
+    {
+        return $query->where('is_finished', true);
     }
 
     protected static function boot()

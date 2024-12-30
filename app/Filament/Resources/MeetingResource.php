@@ -76,7 +76,7 @@ class MeetingResource extends Resource
                     ->searchable()
                     ->preload()
                     ->live()
-                    ->afterStateUpdated(function (Set $set, ?array $state, Meeting $record) {
+                    ->afterStateUpdated(function (Set $set, ?array $state, ?Meeting $record) {
                         if (is_array($state) && isset($state['meetable_id'])) {
                             $writerId = $state['meetable_id'];
 
