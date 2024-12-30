@@ -55,7 +55,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 FilamentExceptionsPlugin::make(),
-                //FilamentAuthenticationLogPlugin::make(),
+                // FilamentAuthenticationLogPlugin::make(),
             ])
             ->viteTheme([
                 'resources/css/filament/admin/theme.css',
