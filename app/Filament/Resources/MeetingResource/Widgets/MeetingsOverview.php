@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\MeetingResource\Widgets;
 
 use App\Models\Book;
-use App\Models\Meeting;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Facades\DB;
