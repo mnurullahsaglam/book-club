@@ -124,7 +124,7 @@ class WriterSummaryService
             // Loop through each user who abstained from this meeting
             foreach ($meeting->abstainedUsers as $user) {
                 // Initialize user data if not set
-                if (!isset($participationData[$user->id])) {
+                if (! isset($participationData[$user->id])) {
                     $participationData[$user->id] = [
                         'name' => $user->name,
                         'absence_count' => 0,
