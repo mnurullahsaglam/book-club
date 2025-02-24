@@ -27,8 +27,7 @@ class WriterSummaryService
 
     public function setFirstMeetingDate(): void
     {
-        $this->summary['first_meeting'] = $this->writer->meetings()
-            ->orderBy('date')
+        $this->summary['first_meeting'] = $this->writer->allRelatedMeetings()
             ->first()
             ->date
             ->format('d/m/Y');
@@ -36,9 +35,8 @@ class WriterSummaryService
 
     public function setLastMeetingDate(): void
     {
-        $this->summary['last_meeting'] = $this->writer->meetings()
-            ->orderByDesc('date')
-            ->first()
+        $this->summary['last_meeting'] = $this->writer->allRelatedMeetings()
+            ->last()
             ->date
             ->format('d/m/Y');
     }
@@ -51,8 +49,8 @@ class WriterSummaryService
 
     private function setMeetingStats(): void
     {
-        $this->summary['meetings'] = $this->writer->meetings()->get();
-        $this->summary['meetings_count'] = $this->writer->meetings()->count();
+        $this->summary['meetings'] = $this->writer->allRelatedMeetings();
+        $this->summary['meetings_count'] = $this->writer->allRelatedMeetings()->count();
     }
 
     private function setLocationStats(): void
@@ -75,7 +73,7 @@ class WriterSummaryService
         $guestCounts = collect();
         $totalGuests = 0;
 
-        foreach ($this->writer->meetings as $meeting) {
+        foreach ($this->writer->allRelatedMeetings() as $meeting) {
             $guests = collect($meeting->guests ?? []);
             if ($guests->isNotEmpty()) {
                 foreach ($guests as $guest) {
@@ -86,7 +84,6 @@ class WriterSummaryService
                     }
                 }
             }
-
         }
 
         $sortedGuests = $guestCounts->sortDesc()->map(function ($count, $guest) {
@@ -122,12 +119,12 @@ class WriterSummaryService
         // Initialize an array to store user participation data
         $participationData = [];
 
-        // Loop through each meeting associated with the writer
-        foreach ($this->writer->meetings as $meeting) {
+        // Loop through all meetings (direct and through books) associated with the writer
+        foreach ($this->writer->allRelatedMeetings() as $meeting) {
             // Loop through each user who abstained from this meeting
             foreach ($meeting->abstainedUsers as $user) {
                 // Initialize user data if not set
-                if (! isset($participationData[$user->id])) {
+                if (!isset($participationData[$user->id])) {
                     $participationData[$user->id] = [
                         'name' => $user->name,
                         'absence_count' => 0,
@@ -147,7 +144,7 @@ class WriterSummaryService
         }
 
         // Collect all users who were part of any meeting
-        $allUsers = $this->writer->meetings->flatMap(function ($meeting) {
+        $allUsers = $this->writer->allRelatedMeetings()->flatMap(function ($meeting) {
             return $meeting->users;
         })->unique('id'); // Avoid duplicate users
 
@@ -171,7 +168,7 @@ class WriterSummaryService
 
     private function setPresentationList(): void
     {
-        $presentationList = $this->writer->meetings->flatMap(function ($meeting) {
+        $presentationList = $this->writer->allRelatedMeetings()->flatMap(function ($meeting) {
             return collect($meeting->presentations ?? [])
                 ->filter()
                 ->map(function ($presentation) {

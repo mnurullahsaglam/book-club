@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\Slugger;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -44,6 +45,22 @@ class Writer extends Model
     {
         return $this->hasMany(Book::class)
             ->where('is_finished', true);
+    }
+
+    public function allRelatedMeetings(): Collection
+    {
+        $directMeetings = $this->meetings;
+
+        $bookIds = $this->books->pluck('id');
+
+        $bookMeetings = Meeting::where('meetable_type', Book::class)
+            ->whereIn('meetable_id', $bookIds)
+            ->get();
+
+        return $directMeetings
+            ->merge($bookMeetings)
+            ->sortBy('date')
+            ->values();
     }
 
     public function readingProgress(): Attribute
