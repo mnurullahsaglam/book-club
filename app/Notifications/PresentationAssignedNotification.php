@@ -24,6 +24,7 @@ class PresentationAssignedNotification extends Notification
             ->subject('Yeni Sunum Atandı')
             ->greeting('Merhaba!')
             ->line('Önümüzdeki toplantı için bir sunum atandı.')
+            ->line("<b>$this->presentation->citation</b>")
             ->when($this->presentation->file, function (MailMessage $mailMessage) {
                 $mailMessage->line('Dosyayı ekte bulabilir veya aşağıdaki butona tıklayarak tarayıcı üzerinde görüntüleyebilirsiniz.');
             }, function (MailMessage $mailMessage) {
