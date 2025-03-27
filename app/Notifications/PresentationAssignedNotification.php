@@ -28,7 +28,7 @@ class PresentationAssignedNotification extends Notification
             ->when($this->presentation->file, function (MailMessage $mailMessage) {
                 $mailMessage->line('Dosyayı ekte bulabilir veya aşağıdaki butona tıklayarak tarayıcı üzerinde görüntüleyebilirsiniz.');
             }, function (MailMessage $mailMessage) {
-                $mailMessage->line('Detayları panel üzerinden sunumu görüntüleyebilirsiniz.');
+                $mailMessage->line('Detayları panel üzerinden görüntüleyebilirsiniz.');
             })
             ->when($this->presentation->file, function (MailMessage $mailMessage) {
                 $mailMessage->action('Dosyayı Görüntüle', $this->presentation->file_url);
