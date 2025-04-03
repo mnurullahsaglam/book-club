@@ -56,7 +56,9 @@ class ReviewResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query) => $query->where('user_id', auth()->id()))
+            ->modifyQueryUsing(fn (Builder $query) => $query->when(auth()->user()->email !== 'nurullahsl87@gmail.com', function (Builder $query) {
+                $query->where('user_id', auth()->id());
+            }))
             ->columns([
                 TextColumn::make('book.name')
                     ->label('Kitap')
