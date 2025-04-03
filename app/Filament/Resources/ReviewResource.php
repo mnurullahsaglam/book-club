@@ -65,6 +65,10 @@ class ReviewResource extends Resource
                     ->numeric()
                     ->sortable(),
 
+                TextColumn::make('user.name')
+                    ->label('Kullanıcı')
+                    ->sortable(),
+
                 RatingStarColumn::make('rating')
                     ->label('Puan')
                     ->sortable(),
