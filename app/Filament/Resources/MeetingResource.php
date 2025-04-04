@@ -299,12 +299,6 @@ class MeetingResource extends Resource
                                 ->html()
                                 ->columnSpanFull()
                                 ->visible(fn (Meeting $record) => $record->decisions),
-
-                            TextEntry::make('presentations')
-                                ->label('Sunumlar')
-                                ->html()
-                                ->columnSpanFull()
-                                ->visible(fn (Meeting $record) => $record->decisions),
                         ])
                             ->columns(4),
                     ])
