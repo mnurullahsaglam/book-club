@@ -103,7 +103,7 @@ class Presentation extends Model
         $citation = $this->title;
 
         if ($this->author) {
-            $citation .= ', <i>'.$this->author.'</i>';
+            $citation .= ', '.$this->author;
         }
 
         if ($this->publication_year) {
