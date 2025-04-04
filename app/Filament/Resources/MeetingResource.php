@@ -139,7 +139,7 @@ class MeetingResource extends Resource
                 Section::make('Katılımcılar')
                     ->schema([
                         Repeater::make('meetingUsers')
-                            ->relationship('meetingUsers')
+                            ->relationship('meetingUsers', fn(Builder $query) => $query->with('user'))
                             ->hiddenLabel()
                             ->schema([
                                 Hidden::make('user_id')
