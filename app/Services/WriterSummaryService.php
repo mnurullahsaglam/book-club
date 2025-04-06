@@ -21,6 +21,7 @@ class WriterSummaryService
         $this->setAbstainedUserStats();
         $this->setGuestStats();
         $this->setPresentationList();
+        $this->setBookList();
 
         return $this->generateSummaryText();
     }
@@ -195,5 +196,28 @@ class WriterSummaryService
         });
 
         $this->summary['presentation_list'] = $presentationList;
+    }
+
+    private function setBookList(): void
+    {
+        $bookList = $this->writer->books->flatMap(function ($book) {
+            return collect([$book])
+            ->map(function ($book) {
+                $item = '- ' . $book->name;
+
+                $reviewCount = $book->reviews->count();
+
+                if ($reviewCount > 0) {
+                    $averageRating = round($book->reviews->avg('rating'), 1);
+                    $item .= " ({$averageRating} puan/{$reviewCount} değerlendirme)";
+                } else {
+                    $item .= ' (Değerlendirilmemiş)';
+                }
+
+                return $item;
+            });
+        });
+
+        $this->summary['book_list'] = $bookList;
     }
 }
