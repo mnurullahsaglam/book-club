@@ -116,14 +116,10 @@ class WriterSummaryService
 
     private function setAbstainedUserStats(): void
     {
-        // Initialize an array to store user participation data
         $participationData = [];
 
-        // Loop through all meetings (direct and through books) associated with the writer
         foreach ($this->writer->allRelatedMeetings() as $meeting) {
-            // Loop through each user who abstained from this meeting
             foreach ($meeting->abstainedUsers as $user) {
-                // Initialize user data if not set
                 if (! isset($participationData[$user->id])) {
                     $participationData[$user->id] = [
                         'name' => $user->name,
@@ -132,35 +128,47 @@ class WriterSummaryService
                     ];
                 }
 
-                // Increment the absence count
                 $participationData[$user->id]['absence_count'] += 1;
 
-                // Add the reason for not participating
                 $reasons = $user->pivot->reason_for_not_participating
-                    ? collect(explode(',', $user->pivot->reason_for_not_participating))->unique()
+                    ? collect(explode(',', $user->pivot->reason_for_not_participating))->map(fn ($r) => trim($r))->unique()
                     : collect();
+
                 $participationData[$user->id]['reasons'] = $participationData[$user->id]['reasons']->merge($reasons)->unique();
             }
         }
 
-        // Collect all users who were part of any meeting
         $allUsers = $this->writer->allRelatedMeetings()->flatMap(function ($meeting) {
             return $meeting->users;
-        })->unique('id'); // Avoid duplicate users
+        })->unique('id');
 
-        // Determine which users participated in all meetings
-        $abstainedText = '';
+        $fullParticipants = collect();
+        $abstainers = collect();
 
         foreach ($allUsers as $user) {
             if (isset($participationData[$user->id])) {
-                // This user missed some meetings
                 $absenceCount = $participationData[$user->id]['absence_count'];
                 $reasons = $participationData[$user->id]['reasons']->implode(', ');
-                $abstainedText .= "{$user->name}; {$reasons} dolayısıyla toplam {$absenceCount} defa katılım gösteremedi. ";
+                $abstainers->push([
+                    'name' => $user->name,
+                    'text' => "{$user->name}; {$reasons} dolayısıyla toplam {$absenceCount} defa",
+                ]);
             } else {
-                // This user participated in all meetings
-                $abstainedText .= "{$user->name} tüm toplantılara katılım sağladı. ";
+                $fullParticipants->push($user->name);
             }
+        }
+
+        $fullParticipants = $fullParticipants->sort()->values();
+        $abstainers = $abstainers->sortBy('name')->pluck('text');
+
+        $abstainedText = '';
+
+        if ($fullParticipants->isNotEmpty()) {
+            $abstainedText .= $fullParticipants->implode(', ') . " tüm toplantılara katılım sağladı. ";
+        }
+
+        if ($abstainers->isNotEmpty()) {
+            $abstainedText .= $abstainers->implode(', ') . " katılım gösteremedi.";
         }
 
         $this->summary['abstained_users'] = $abstainedText;
