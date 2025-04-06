@@ -59,6 +59,7 @@ class ReviewResource extends Resource
             ->modifyQueryUsing(fn (Builder $query) => $query->when(auth()->user()->email !== 'nurullahsl87@gmail.com', function (Builder $query) {
                 $query->where('user_id', auth()->id());
             }))
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('book.name')
                     ->label('Kitap')
