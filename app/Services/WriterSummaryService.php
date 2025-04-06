@@ -100,17 +100,19 @@ class WriterSummaryService
     {
         $summaryText = $this->writer->personal_information_text;
 
-        $summaryText .= 'İlk toplantı tarihi: '.$this->summary['first_meeting'].'<br>';
-        $summaryText .= 'Son toplantı tarihi: '.$this->summary['last_meeting'].'<br>';
+        $summaryText .= '<b>İlk toplantı tarihi:</b> '.$this->summary['first_meeting'].'<br>';
+        $summaryText .= '<b>Son toplantı tarihi:</b> '.$this->summary['last_meeting'].'<br>';
 
-        $summaryText .= 'Toplam toplantı sayısı: '.$this->summary['meetings_count'].'<br>';
-        $summaryText .= 'Toplam kitap sayısı: '.$this->summary['books_count'].'<br>';
+        $summaryText .= '<b>Toplam toplantı sayısı:</b> '.$this->summary['meetings_count'].'<br>';
+        $summaryText .= '<b>Toplam kitap sayısı:</b> '.$this->summary['books_count'].'<br>';
 
-        $summaryText .= 'Mekanlar ('.$this->summary['locations_count'].'): '.$this->summary['locations_text'].'<br>';
-        $summaryText .= 'Misafirler ('.$this->summary['guests_count'].'): '.$this->summary['guests_text'].'<br>';
-        $summaryText .= 'Katılım Durumu: '.$this->summary['abstained_users'].'<br>';
+        $summaryText .= '<b>Mekanlar ('.$this->summary['locations_count'].'</b>): '.$this->summary['locations_text'].'<br>';
+        $summaryText .= '<b>Misafirler ('.$this->summary['guests_count'].'</b>): '.$this->summary['guests_text'].'<br>';
+        $summaryText .= '<b>Katılım Durumu:</b> '.$this->summary['abstained_users'].'<br>';
 
-        $summaryText .= 'Sunumlar: <br>'.$this->summary['presentation_list']->implode('<br>');
+        $summaryText .= '<b>Kitaplar:</b> <br>'.$this->summary['book_list']->implode('<br>');
+        $summaryText .= '<br>';
+        $summaryText .= '<b>Sunumlar:</b> <br>'.$this->summary['presentation_list']->implode('<br>');
 
         return $summaryText;
     }
