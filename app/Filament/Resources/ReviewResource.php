@@ -11,6 +11,7 @@ use Filament\Resources\Resource;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use IbrahimBougaoua\FilamentRatingStar\Actions\RatingStar;
 use IbrahimBougaoua\FilamentRatingStar\Columns\RatingStarColumn;
@@ -75,7 +76,10 @@ class ReviewResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                //
+                Filter::make('not_entered')
+                    ->label('Puan verilmemiş')
+                    ->query(fn (Builder $query): Builder => $query->whereNull('rating'))
+                    ->default()
             ])
             ->actions([
                 EditAction::make(),
