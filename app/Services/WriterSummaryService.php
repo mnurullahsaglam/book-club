@@ -8,7 +8,9 @@ class WriterSummaryService
 {
     private array $summary;
 
-    public function __construct(protected Writer $writer) {}
+    public function __construct(protected Writer $writer) {
+        $this->writer->loadMissing('books', 'readBooks', 'books.reviews', 'meetings', 'meetings.users', 'meetings.abstainedUsers', 'meetings.presentations');
+    }
 
     public function handle(): string
     {
