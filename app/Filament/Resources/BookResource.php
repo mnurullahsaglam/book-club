@@ -105,6 +105,7 @@ class BookResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn($query) => $query->with(['writer', 'publisher', 'reviews']))
             ->defaultSort('name')
             ->columns([
                 TextColumn::make('name')
