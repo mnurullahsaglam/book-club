@@ -30,6 +30,6 @@ class Review extends Model
 
     public function scopeEntered(Builder $query): Builder
     {
-        return $query->where('rating', '>', '0');
+        return $query->whereNotNull('rating');
     }
 }
