@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use App\Filament\Resources\ReviewResource;
+use App\Notifications\BookFinishedNotification;
 use App\Traits\Slugger;
+use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -72,7 +75,6 @@ class Book extends Model
 
         static::created(function (Book $book) {
             if ($book->is_finished) {
-                // if the book is finished, create review for each user
                 $users = User::active()->get();
 
                 foreach ($users as $user) {
@@ -92,25 +94,31 @@ class Book extends Model
         });
 
         static::updating(function (Book $book) {
-            if ($book->is_finished) {
-                // if the book is finished and no reviews, create review for each user
-                if ($book->reviews()->count() === 0) {
-                    $users = User::active()->get();
+            if (! $book->is_finished || $book->reviews()->exists()) {
+                return;
+            }
 
-                    foreach ($users as $user) {
-                        $book->reviews()->create([
-                            'user_id' => $user->id,
-                            'book_id' => $book->id,
-                            'comment' => '',
-                        ]);
+            $users = User::active()->get();
 
-                        Notification::make()
-                            ->title('Yeni bir kitap bitti ve değerlendirmenizi bekliyor')
-                            ->icon('heroicon-o-star')
-                            ->iconColor('info')
-                            ->sendToDatabase($user);
-                    }
-                }
+            foreach ($users as $user) {
+                $book->reviews()->create([
+                    'user_id' => $user->id,
+                ]);
+
+                Notification::make()
+                    ->title('Yeni bir kitap bitti ve değerlendirmenizi bekliyor')
+                    ->icon('heroicon-o-star')
+                    ->iconColor('info')
+                    ->actions([
+                        Action::make('make_review')
+                            ->label('Değerlendir')
+                            ->button()
+                            ->url(ReviewResource::getUrl())
+                            ->markAsRead(),
+                    ])
+                    ->sendToDatabase($user);
+
+                $user->notify(new BookFinishedNotification($book->writer->name, $book->name));
             }
         });
     }
