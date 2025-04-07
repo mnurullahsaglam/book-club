@@ -93,7 +93,7 @@ class Presentation extends Model
             if ($presentation->isDirty('user_id')) {
                 $oldUser = User::find($presentation->getOriginal('user_id'));
 
-                $notificationText = "Sunumunuz yeni bir kullanıcıya atandı.";
+                $notificationText = 'Sunumunuz yeni bir kullanıcıya atandı.';
                 $presentation->user->notify(
                     Notification::make()
                         ->title('Sunum Atandı')
