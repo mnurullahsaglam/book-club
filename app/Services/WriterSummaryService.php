@@ -8,7 +8,8 @@ class WriterSummaryService
 {
     private array $summary;
 
-    public function __construct(protected Writer $writer) {
+    public function __construct(protected Writer $writer)
+    {
         $this->writer->loadMissing('books', 'readBooks', 'books.reviews', 'meetings', 'meetings.users', 'meetings.abstainedUsers', 'meetings.presentations');
     }
 
@@ -169,11 +170,11 @@ class WriterSummaryService
         $abstainedText = '';
 
         if ($fullParticipants->isNotEmpty()) {
-            $abstainedText .= $fullParticipants->implode(', ') . " tüm toplantılara katılım sağladı. ";
+            $abstainedText .= $fullParticipants->implode(', ').' tüm toplantılara katılım sağladı. ';
         }
 
         if ($abstainers->isNotEmpty()) {
-            $abstainedText .= $abstainers->implode(', ') . " katılım gösteremedi.";
+            $abstainedText .= $abstainers->implode(', ').' katılım gösteremedi.';
         }
 
         $this->summary['abstained_users'] = $abstainedText;
@@ -206,20 +207,20 @@ class WriterSummaryService
     {
         $bookList = $this->writer->books->flatMap(function ($book) {
             return collect([$book])
-            ->map(function ($book) {
-                $item = '- ' . $book->name;
+                ->map(function ($book) {
+                    $item = '- '.$book->name;
 
-                $reviewCount = $book->reviews->count();
+                    $reviewCount = $book->reviews->count();
 
-                if ($reviewCount > 0) {
-                    $averageRating = round($book->reviews->avg('rating'), 1);
-                    $item .= " ({$averageRating} puan/{$reviewCount} değerlendirme)";
-                } else {
-                    $item .= ' (Değerlendirilmemiş)';
-                }
+                    if ($reviewCount > 0) {
+                        $averageRating = round($book->reviews->avg('rating'), 1);
+                        $item .= " ({$averageRating} puan/{$reviewCount} değerlendirme)";
+                    } else {
+                        $item .= ' (Değerlendirilmemiş)';
+                    }
 
-                return $item;
-            });
+                    return $item;
+                });
         });
 
         $this->summary['book_list'] = $bookList;

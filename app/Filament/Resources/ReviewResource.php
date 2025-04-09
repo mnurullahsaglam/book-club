@@ -79,7 +79,7 @@ class ReviewResource extends Resource
                 Filter::make('not_entered')
                     ->label('Puan verilmemiş')
                     ->query(fn (Builder $query): Builder => $query->whereNull('rating'))
-                    ->default()
+                    ->default(),
             ])
             ->actions([
                 EditAction::make(),

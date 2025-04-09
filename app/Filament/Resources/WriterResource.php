@@ -85,7 +85,7 @@ class WriterResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn($query) => $query->with('books', 'readBooks')->withCount('books'))
+            ->modifyQueryUsing(fn ($query) => $query->with('books', 'readBooks')->withCount('books'))
             ->defaultSort('name')
             ->columns([
                 TextColumn::make('name')
