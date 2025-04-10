@@ -135,6 +135,19 @@ class Presentation extends Model
                 $presentation->user->notify(new PresentationAssignedNotification($presentation));
             }
         });
+
+        self::deleting(function (Presentation $presentation) {
+            $presentation->user->notify(
+                Notification::make()
+                    ->title('Sunum Silindi')
+                    ->body('Sunumunuz silindi.')
+                    ->icon('heroicon-o-document-check')
+                    ->iconColor('info')
+                    ->toDatabase()
+            );
+
+            $presentation->user->notify(new PresentationRemovedNotification($presentation));
+        });
     }
 
     public function title(): Attribute
