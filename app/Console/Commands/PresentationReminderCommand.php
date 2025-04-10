@@ -21,10 +21,13 @@ class PresentationReminderCommand extends Command
         if ($nextMeeting) {
             $presentations = $nextMeeting->presentations()
                 ->with('user')
-                ->get();
+                ->get()
+                ->groupBy('user_id');
 
-            foreach ($presentations as $presentation) {
-                $presentation->user->notify(new PresentationReminderNotification($presentation));
+            foreach ($presentations as $userPresentations) {
+                $user = $userPresentations->first()->user;
+
+                $user->notify(new PresentationReminderNotification($userPresentations));
             }
         }
     }
