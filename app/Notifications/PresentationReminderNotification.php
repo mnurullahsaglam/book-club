@@ -12,9 +12,7 @@ class PresentationReminderNotification extends Notification implements ShouldQue
 {
     use Queueable;
 
-    public function __construct(private readonly Collection $presentations)
-    {
-    }
+    public function __construct(private readonly Collection $presentations) {}
 
     public function via($notifiable): array
     {
@@ -33,7 +31,7 @@ class PresentationReminderNotification extends Notification implements ShouldQue
 
             if ($presentation->file_ur) {
                 $mailMessage->attach($presentation->file_url, [
-                    'as' => $presentation->title . '.pdf',
+                    'as' => $presentation->title.'.pdf',
                     'mime' => 'application/pdf',
                 ]);
             }
