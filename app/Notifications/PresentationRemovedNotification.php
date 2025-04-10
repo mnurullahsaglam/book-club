@@ -23,7 +23,7 @@ class PresentationRemovedNotification extends Notification
         return (new MailMessage)
             ->subject('Sunum Başkasına Atandı')
             ->greeting('Merhaba!')
-            ->line('Önümüzdeki toplantı için size verilen sunum başkasına atandı.')
+            ->line('Önümüzdeki toplantı için size verilen sunum silindi.')
             ->line("**{$this->presentation->citation}**")
             ->line('Lütfen size başka sunumlar atanıp atanmadığını kontrol edin.')
             ->salutation('Keyifli okumalar,');
