@@ -12,9 +12,7 @@ class PresentationReminderNotification extends Notification implements ShouldQue
 {
     use Queueable;
 
-    public function __construct(private readonly Presentation $presentation)
-    {
-    }
+    public function __construct(private readonly Presentation $presentation) {}
 
     public function via($notifiable): array
     {
