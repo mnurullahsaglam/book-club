@@ -11,9 +11,7 @@ class MeetingSummaryNotification extends Notification
 {
     use Queueable;
 
-    public function __construct(private readonly Meeting $meeting)
-    {
-    }
+    public function __construct(private readonly Meeting $meeting) {}
 
     public function via(): array
     {
@@ -23,7 +21,7 @@ class MeetingSummaryNotification extends Notification
     public function toMail(): MailMessage
     {
         return (new MailMessage)
-            ->subject($this->meeting->date->format('d/m/Y') . ' Tarihli Toplantı Özeti')
+            ->subject($this->meeting->date->format('d/m/Y').' Tarihli Toplantı Özeti')
             ->markdown('mail.meetings.summary', [
                 'meeting' => $this->meeting,
             ]);
