@@ -8,6 +8,12 @@ Geçtiğimiz toplantının özetini aşağıda bulabilirsiniz:
 **Tarih:** {{ $meeting->date->format('d/m/Y') }}
 **Yer:** {{ $meeting->location }}
 
+@if($meeting->meetable instanceof \App\Models\Book)
+**Kitap/Yazar:** {{ $meeting->meetable->name }} / {{ $meeting->meetable->writer->name }}
+@elseif($meeting->meetable instanceof \App\Models\Writer)
+**Yazar:** {{ $meeting->meetable->name }}
+@endif
+
 ### Katılımcılar
 @foreach($meeting->users as $user)
 1. {{ $user->name }}
