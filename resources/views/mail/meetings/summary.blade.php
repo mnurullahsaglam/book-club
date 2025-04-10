@@ -33,10 +33,10 @@ Geçtiğimiz toplantının özetini aşağıda bulabilirsiniz:
 @endif
 
 ### Toplantı Konuları
-{!! $meeting->topics !!}
+{!! $meeting->topics ?? 'Konu yok.' !!}
 
 ### Kararlar
-{!! $meeting->decisions !!}
+{!! $meeting->decisions ?? 'Bir karar alınmadı.'!!}
 
 Keyifli okumalar,
 </x-mail::message>
