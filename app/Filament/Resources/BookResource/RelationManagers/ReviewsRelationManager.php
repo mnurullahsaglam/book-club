@@ -7,7 +7,7 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use IbrahimBougaoua\FilamentRatingStar\Columns\Components\RatingStar;
+use Mokhosh\FilamentRating\Columns\RatingColumn;
 
 class ReviewsRelationManager extends RelationManager
 {
@@ -39,10 +39,9 @@ class ReviewsRelationManager extends RelationManager
                     ->numeric()
                     ->sortable(),
 
-                RatingStar::make('rating')
+                RatingColumn::make('rating')
                     ->label('Puan')
-                    ->sortable()
-                    ->size('sm'),
+                    ->sortable(),
 
                 TextColumn::make('comment')
                     ->label('Yorum'),

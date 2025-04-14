@@ -13,9 +13,9 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
-use IbrahimBougaoua\FilamentRatingStar\Columns\Components\RatingStar as RatingStarColumn;
-use IbrahimBougaoua\FilamentRatingStar\Forms\Components\RatingStar;
 use Illuminate\Database\Eloquent\Builder;
+use Mokhosh\FilamentRating\Columns\RatingColumn;
+use Mokhosh\FilamentRating\Components\Rating;
 
 class ReviewResource extends Resource
 {
@@ -43,7 +43,7 @@ class ReviewResource extends Resource
                     ->hidden()
                     ->required(),
 
-                RatingStar::make()
+                Rating::make('rating')
                     ->label('Puan')
                     ->required(),
 
@@ -71,10 +71,9 @@ class ReviewResource extends Resource
                     ->label('Kullanıcı')
                     ->sortable(),
 
-                RatingStarColumn::make('rating')
+                RatingColumn::make('rating')
                     ->label('Puan')
-                    ->sortable()
-                    ->size('sm'),
+                    ->sortable(),
             ])
             ->filters([
                 Filter::make('not_entered')
