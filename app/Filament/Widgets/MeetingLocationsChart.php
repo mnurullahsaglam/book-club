@@ -11,6 +11,8 @@ class MeetingLocationsChart extends ChartWidget
 
     protected static ?int $sort = 2;
 
+    protected static ?string $pollingInterval = null;
+
     public function getDescription(): ?string
     {
         return Meeting::past()->count().' toplantı yapıldı.';
