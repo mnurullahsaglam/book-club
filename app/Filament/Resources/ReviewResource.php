@@ -13,8 +13,8 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
-use IbrahimBougaoua\FilamentRatingStar\Actions\RatingStar;
-use IbrahimBougaoua\FilamentRatingStar\Columns\RatingStarColumn;
+use IbrahimBougaoua\FilamentRatingStar\Forms\Components\RatingStar;
+use IbrahimBougaoua\FilamentRatingStar\Columns\Components\RatingStar as RatingStarColumn;
 use Illuminate\Database\Eloquent\Builder;
 
 class ReviewResource extends Resource
@@ -73,7 +73,8 @@ class ReviewResource extends Resource
 
                 RatingStarColumn::make('rating')
                     ->label('Puan')
-                    ->sortable(),
+                    ->sortable()
+                    ->size('sm'),
             ])
             ->filters([
                 Filter::make('not_entered')
