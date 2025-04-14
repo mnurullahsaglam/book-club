@@ -45,6 +45,17 @@ class MeetingLocationsChart extends ChartWidget
         ];
     }
 
+    protected function getOptions(): array
+    {
+        return [
+            'plugins' => [
+                'legend' => [
+                    'display' => false,
+                ],
+            ],
+        ];
+    }
+
     protected function getType(): string
     {
         return 'pie';

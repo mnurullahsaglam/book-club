@@ -49,6 +49,11 @@ class MeetingParticipantsChart extends ChartWidget
                     'max' => 10, // TODO: could be dynamic
                 ],
             ],
+            'plugins' => [
+                'legend' => [
+                    'display' => false,
+                ],
+            ],
         ];
     }
 
