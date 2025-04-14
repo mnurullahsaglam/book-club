@@ -13,8 +13,8 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
-use IbrahimBougaoua\FilamentRatingStar\Forms\Components\RatingStar;
 use IbrahimBougaoua\FilamentRatingStar\Columns\Components\RatingStar as RatingStarColumn;
+use IbrahimBougaoua\FilamentRatingStar\Forms\Components\RatingStar;
 use Illuminate\Database\Eloquent\Builder;
 
 class ReviewResource extends Resource
