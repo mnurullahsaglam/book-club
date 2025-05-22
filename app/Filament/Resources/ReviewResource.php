@@ -29,6 +29,64 @@ class ReviewResource extends Resource
 
     protected static ?string $pluralLabel = 'Değerlendirmeler';
 
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->modifyQueryUsing(fn(Builder $query) => $query->when(auth()->user()->email !== 'nurullahsl87@gmail.com', function (Builder $query) {
+                $query->where('user_id', auth()->id());
+            }))
+            ->defaultSort('created_at', 'desc')
+            ->columns([
+                TextColumn::make('book.name')
+                    ->label('Kitap')
+                    ->numeric()
+                    ->sortable(),
+
+                TextColumn::make('user.name')
+                    ->label('Kullanıcı')
+                    ->sortable(),
+
+                RatingColumn::make('rating')
+                    ->label('Puan')
+                    ->sortable(),
+            ])
+            ->filters([
+                Filter::make('not_entered')
+                    ->label('Puan verilmemiş')
+                    ->query(fn(Builder $query): Builder => $query->whereNull('rating'))
+                    ->default(),
+
+                Filter::make('user_ids')
+                    ->form([
+                        Select::make('user_ids')
+                            ->relationship('user', 'name')
+                            ->label('Kullanıcı')
+                            ->searchable()
+                            ->preload()
+                            ->multiple()
+                            ->placeholder('Kullanıcı seçiniz'),
+                    ])
+                    ->query(function ($query, array $data) {
+                        return $query->when($data['user_ids'], function ($query) use ($data) {
+                            $query->whereIn('user_id', $data['user_ids']);
+                        });
+                    })
+                    ->indicateUsing(function (array $data) {
+                        if (!$data['user_ids']) {
+                            return null;
+                        }
+
+                        return 'Kullanıcı: ' . implode(', ', $data['user_ids']);
+                    }),
+            ])
+            ->actions([
+                EditAction::make(),
+            ])
+            ->bulkActions([
+                DeleteBulkAction::make(),
+            ]);
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -51,41 +109,6 @@ class ReviewResource extends Resource
                     ->label('Yorum')
                     ->maxLength(65535)
                     ->columnSpanFull(),
-            ]);
-    }
-
-    public static function table(Table $table): Table
-    {
-        return $table
-            ->modifyQueryUsing(fn (Builder $query) => $query->when(auth()->user()->email !== 'nurullahsl87@gmail.com', function (Builder $query) {
-                $query->where('user_id', auth()->id());
-            }))
-            ->defaultSort('created_at', 'desc')
-            ->columns([
-                TextColumn::make('book.name')
-                    ->label('Kitap')
-                    ->numeric()
-                    ->sortable(),
-
-                TextColumn::make('user.name')
-                    ->label('Kullanıcı')
-                    ->sortable(),
-
-                RatingColumn::make('rating')
-                    ->label('Puan')
-                    ->sortable(),
-            ])
-            ->filters([
-                Filter::make('not_entered')
-                    ->label('Puan verilmemiş')
-                    ->query(fn (Builder $query): Builder => $query->whereNull('rating'))
-                    ->default(),
-            ])
-            ->actions([
-                EditAction::make(),
-            ])
-            ->bulkActions([
-                DeleteBulkAction::make(),
             ]);
     }
 
