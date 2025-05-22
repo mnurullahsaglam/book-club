@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ReviewResource\Pages\ListReviews;
 use App\Models\Review;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
@@ -12,6 +13,7 @@ use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Mokhosh\FilamentRating\Columns\RatingColumn;
@@ -32,7 +34,7 @@ class ReviewResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query) => $query->when(auth()->user()->email !== 'nurullahsl87@gmail.com', function (Builder $query) {
+            ->modifyQueryUsing(fn(Builder $query) => $query->when(auth()->user()->email !== 'nurullahsl87@gmail.com', function (Builder $query) {
                 $query->where('user_id', auth()->id());
             }))
             ->defaultSort('created_at', 'desc')
@@ -58,30 +60,33 @@ class ReviewResource extends Resource
             ->filters([
                 Filter::make('not_entered')
                     ->label('Puan verilmemiş')
-                    ->query(fn (Builder $query): Builder => $query->whereNull('rating'))
+                    ->query(fn(Builder $query): Builder => $query->whereNull('rating'))
                     ->default(),
 
-                Filter::make('user_ids')
-                    ->form([
-                        Select::make('user_ids')
-                            ->relationship('user', 'name')
-                            ->label('Kullanıcı')
-                            ->searchable()
-                            ->preload()
-                            ->multiple()
-                            ->placeholder('Kullanıcı seçiniz'),
-                    ])
-                    ->query(function ($query, array $data) {
-                        return $query->when($data['user_ids'], function ($query) use ($data) {
-                            $query->whereIn('user_id', $data['user_ids']);
-                        });
-                    })
-                    ->indicateUsing(function (array $data) {
-                        if (! $data['user_ids']) {
+                SelectFilter::make('users')
+                    ->label('Kullanıcılar')
+                    ->relationship('user', 'name')
+                    ->multiple()
+                    ->searchable()
+                    ->preload()
+                    ->indicateUsing(function ($state) {
+                        $userNames = User::whereIn('id', $state['values'])
+                            ->orderBy('name')
+                            ->get()
+                            ->map(function ($user) {
+                                return $user->name;
+                            })
+                            ->toArray();
+
+                        $indicator = 'Kullanıcı: ';
+
+                        $indicator .= implode(', ', $userNames);
+
+                        if (!$state['values']) {
                             return null;
                         }
 
-                        return 'Kullanıcı: '.implode(', ', $data['user_ids']);
+                        return $indicator;
                     }),
             ])
             ->actions([
