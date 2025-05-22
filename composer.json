@@ -11,6 +11,7 @@
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^3.0",
         "filament/filament": "^3.3",
+        "filipfonal/filament-log-manager": "^2.1",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^12.8.1",
         "laravel/tinker": "^2.8",
