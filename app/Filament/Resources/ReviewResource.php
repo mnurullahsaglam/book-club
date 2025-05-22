@@ -37,6 +37,11 @@ class ReviewResource extends Resource
             }))
             ->defaultSort('created_at', 'desc')
             ->columns([
+                TextColumn::make('book.writer.name')
+                    ->label('Yazar')
+                    ->numeric()
+                    ->sortable(),
+
                 TextColumn::make('book.name')
                     ->label('Kitap')
                     ->numeric()
