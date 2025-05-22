@@ -21,7 +21,7 @@ class PresentationRemovedNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Sunum Başkasına Atandı')
+            ->subject('Sunum Silindi')
             ->greeting('Merhaba!')
             ->line('Önümüzdeki toplantı için size verilen sunum silindi.')
             ->line("**{$this->presentation->citation}**")
