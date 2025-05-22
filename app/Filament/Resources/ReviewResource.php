@@ -32,7 +32,7 @@ class ReviewResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn(Builder $query) => $query->when(auth()->user()->email !== 'nurullahsl87@gmail.com', function (Builder $query) {
+            ->modifyQueryUsing(fn (Builder $query) => $query->when(auth()->user()->email !== 'nurullahsl87@gmail.com', function (Builder $query) {
                 $query->where('user_id', auth()->id());
             }))
             ->defaultSort('created_at', 'desc')
@@ -53,7 +53,7 @@ class ReviewResource extends Resource
             ->filters([
                 Filter::make('not_entered')
                     ->label('Puan verilmemiş')
-                    ->query(fn(Builder $query): Builder => $query->whereNull('rating'))
+                    ->query(fn (Builder $query): Builder => $query->whereNull('rating'))
                     ->default(),
 
                 Filter::make('user_ids')
@@ -72,11 +72,11 @@ class ReviewResource extends Resource
                         });
                     })
                     ->indicateUsing(function (array $data) {
-                        if (!$data['user_ids']) {
+                        if (! $data['user_ids']) {
                             return null;
                         }
 
-                        return 'Kullanıcı: ' . implode(', ', $data['user_ids']);
+                        return 'Kullanıcı: '.implode(', ', $data['user_ids']);
                     }),
             ])
             ->actions([
