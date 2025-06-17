@@ -34,7 +34,7 @@ class ReviewResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn(Builder $query) => $query->when(auth()->user()->email !== 'nurullahsl87@gmail.com', function (Builder $query) {
+            ->modifyQueryUsing(fn (Builder $query) => $query->when(auth()->user()->email !== 'nurullahsl87@gmail.com', function (Builder $query) {
                 $query->where('user_id', auth()->id());
             }))
             ->defaultSort('created_at', 'desc')
@@ -60,7 +60,7 @@ class ReviewResource extends Resource
             ->filters([
                 Filter::make('not_entered')
                     ->label('Puan verilmemiş')
-                    ->query(fn(Builder $query): Builder => $query->whereNull('rating'))
+                    ->query(fn (Builder $query): Builder => $query->whereNull('rating'))
                     ->default(),
 
                 SelectFilter::make('users')
@@ -82,7 +82,7 @@ class ReviewResource extends Resource
 
                         $indicator .= implode(', ', $userNames);
 
-                        if (!$state['values']) {
+                        if (! $state['values']) {
                             return null;
                         }
 
