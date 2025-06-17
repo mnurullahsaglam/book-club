@@ -14,6 +14,7 @@
         "filipfonal/filament-log-manager": "^2.1",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^12.8.1",
+        "laravel/nightwatch": "^1.7",
         "laravel/tinker": "^2.8",
         "mokhosh/filament-rating": "^1.4"
     },
