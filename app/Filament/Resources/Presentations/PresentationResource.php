@@ -2,20 +2,13 @@
 
 namespace App\Filament\Resources\Presentations;
 
-use Filament\Schemas\Schema;
-use Filament\Actions\ActionGroup;
-use Filament\Actions\Action;
 use App\Filament\Resources\Presentations\Pages\ListPresentations;
+use App\Filament\Resources\Presentations\Schemas\PresentationForm;
+use App\Filament\Resources\Presentations\Schemas\PresentationTable;
 use App\Models\Presentation;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\TextColumn;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class PresentationResource extends Resource
@@ -34,87 +27,12 @@ class PresentationResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                Select::make('user_id')
-                    ->label('Kişi')
-                    ->relationship('user', 'name', fn (Builder $query) => $query->active())
-                    ->required(),
-
-                Select::make('meeting_id')
-                    ->label('Toplantı')
-                    ->relationship('meeting', 'title')
-                    ->required(),
-
-                TextInput::make('title')
-                    ->label('Başlık')
-                    ->required()
-                    ->maxLength(255)
-                    ->columnSpanFull(),
-
-                TextInput::make('Citation')
-                    ->label('Künye')
-                    ->maxLength(255)
-                    ->columnSpanFull(),
-
-                FileUpload::make('file')
-                    ->label('Dosya')
-                    ->required()
-                    ->directory('presentations')
-                    ->columnSpanFull(),
-
-                RichEditor::make('description')
-                    ->label('Açıklama')
-                    ->columnSpanFull(),
-            ]);
+        return PresentationForm::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->columns([
-                TextColumn::make('title')
-                    ->label('Başlık')
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('user.name')
-                    ->label('Kişi')
-                    ->searchable()
-                    ->sortable()
-                    ->visible(fn ($livewire) => $livewire->activeTab === 'all'),
-
-                IconColumn::make('is_recommended')
-                    ->label('Öneriliyor mu?')
-                    ->boolean(),
-            ])
-            ->filters([
-                //
-            ])
-            ->recordActions([
-                ActionGroup::make([
-                    Action::make('make_recommended')
-                        ->label('Önerilenlere Ekle')
-                        ->icon('heroicon-o-check')
-                        ->color('primary')
-                        ->visible(fn (Presentation $presentation) => ! $presentation->is_recommended && $presentation->user_id === auth()->id())
-                        ->action(fn (Presentation $presentation) => $presentation->update(['is_recommended' => true])),
-
-                    Action::make('make_unrecommended')
-                        ->label('Önerilenlerden Çıkar')
-                        ->icon('heroicon-o-x-mark')
-                        ->color('danger')
-                        ->visible(fn (Presentation $presentation) => $presentation->is_recommended && $presentation->user_id === auth()->id())
-                        ->action(fn (Presentation $presentation) => $presentation->update(['is_recommended' => false])),
-
-                    Action::make('view')
-                        ->label('Dosyayı görüntüle')
-                        ->icon('heroicon-o-eye')
-                        ->color('info')
-                        ->url(fn ($record) => $record?->file_url)
-                        ->openUrlInNewTab(),
-                ]),
-            ]);
+        return PresentationTable::configure($table);
     }
 
     public static function getRelations(): array

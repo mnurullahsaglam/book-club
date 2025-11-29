@@ -2,17 +2,14 @@
 
 namespace App\Filament\Resources\Publishers;
 
-use Filament\Schemas\Schema;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\Publishers\Pages\CreatePublisher;
 use App\Filament\Resources\Publishers\Pages\EditPublisher;
 use App\Filament\Resources\Publishers\Pages\ListPublishers;
+use App\Filament\Resources\Publishers\Schemas\PublisherForm;
+use App\Filament\Resources\Publishers\Schemas\PublisherTable;
 use App\Models\Publisher;
-use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables\Columns\TextColumn;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 
 class PublisherResource extends Resource
@@ -31,40 +28,12 @@ class PublisherResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                TextInput::make('name')
-                    ->label('İsim')
-                    ->required()
-                    ->autofocus()
-                    ->maxLength(255),
-            ]);
+        return PublisherForm::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->columns([
-                TextColumn::make('name')
-                    ->label('İsim')
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('books_count')
-                    ->counts('books')
-                    ->label('Kitap Sayısı')
-                    ->sortable(),
-            ])
-            ->filters([
-                //
-            ])
-            ->recordActions([
-                EditAction::make(),
-                DeleteAction::make(),
-            ])
-            ->toolbarActions([
-                DeleteBulkAction::make(),
-            ]);
+        return PublisherTable::configure($table);
     }
 
     public static function getRelations(): array

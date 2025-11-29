@@ -2,43 +2,18 @@
 
 namespace App\Filament\Resources\Meetings;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\MorphToSelect\Type;
-use Filament\Schemas\Components\Utilities\Set;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Actions\ActionGroup;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\Action;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Schemas\Components\Group;
-use Filament\Support\Enums\TextSize;
 use App\Filament\Resources\Meetings\Pages\CreateMeeting;
 use App\Filament\Resources\Meetings\Pages\EditMeeting;
 use App\Filament\Resources\Meetings\Pages\ListMeetings;
 use App\Filament\Resources\Meetings\Pages\ViewMeeting;
 use App\Filament\Resources\Meetings\RelationManagers\PresentationsRelationManager;
-use App\Models\Book;
+use App\Filament\Resources\Meetings\Schemas\MeetingForm;
+use App\Filament\Resources\Meetings\Schemas\MeetingInfolist;
+use App\Filament\Resources\Meetings\Schemas\MeetingTable;
 use App\Models\Meeting;
-use App\Models\User;
-use App\Models\Writer;
-use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\MorphToSelect;
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\TextInput;
-use Filament\Infolists\Components\ImageEntry;
-use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
-use Filament\Support\Enums\FontWeight;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\Filter;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
-use Illuminate\Contracts\Database\Query\Builder;
 
 class MeetingResource extends Resource
 {
@@ -56,279 +31,17 @@ class MeetingResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                MorphToSelect::make('meetable')
-                    ->label('Kitap/Yazar')
-                    ->types([
-                        Type::make(Book::class)
-                            ->titleAttribute('name')
-                            ->label('Kitap'),
-                        Type::make(Writer::class)
-                            ->titleAttribute('name')
-                            ->label('Yazar'),
-                    ])
-                    ->extraAttributes([
-                        'class' => 'border-none px-0 py-1',
-                    ])
-                    ->columns()
-                    ->columnSpanFull()
-                    ->searchable()
-                    ->preload()
-                    ->live()
-                    ->afterStateUpdated(function (Set $set, ?array $state, ?Meeting $record) {
-                        if (is_array($state) && isset($state['meetable_id'])) {
-                            $writerId = $state['meetable_id'];
-
-                            if ($state['meetable_type'] === Book::class) {
-                                $writerId = Book::find($state['meetable_id'])->writer_id;
-                            }
-
-                            $meetingCount = Meeting::whereHasMorph(
-                                'meetable',
-                                [Book::class, Writer::class],
-                                function (Builder $query, string $type) use ($writerId) {
-                                    $column = $type === Book::class ? 'writer_id' : 'id';
-
-                                    $query->where($column, $writerId);
-                                }
-                            )
-                                ->when($record, function (Builder $query) use ($record) {
-                                    $query->where('id', '!=', $record->id);
-                                })
-                                ->count();
-
-                            $set('order', $meetingCount + 1);
-                        } else {
-                            $set('order', 1);
-                        }
-                    })
-                    ->required(),
-
-                TextInput::make('title')
-                    ->label('Başlık')
-                    ->required()
-                    ->maxLength(255),
-
-                TextInput::make('order')
-                    ->label('Sıra')
-                    ->required()
-                    ->numeric()
-                    ->minValue(1),
-
-                TextInput::make('location')
-                    ->label('Mekân')
-                    ->required()
-                    ->maxLength(255)
-                    ->default('Kemah'),
-
-                DatePicker::make('date')
-                    ->label('Tarih')
-                    ->default(now())
-                    ->required(),
-
-                Section::make('Gündem Maddeleri ve Kararlar')
-                    ->schema([
-                        RichEditor::make('topics')
-                            ->label('Gündem Maddeleri'),
-
-                        RichEditor::make('decisions')
-                            ->label('Kararlar'),
-                    ]),
-
-                Section::make('Katılımcılar')
-                    ->schema([
-                        Repeater::make('meetingUsers')
-                            ->relationship('meetingUsers', fn (Builder $query) => $query->with('user'))
-                            ->hiddenLabel()
-                            ->schema([
-                                Hidden::make('user_id')
-                                    ->default(fn (Get $get) => $get('user_id')),
-
-                                Checkbox::make('is_participated')
-                                    ->label(function (Get $get, $record) {
-                                        return $get('name') ?? $record->user->name;
-                                    })
-                                    ->inline()
-                                    ->default(true)
-                                    ->live(),
-
-                                TextInput::make('reason_for_not_participating')
-                                    ->hiddenLabel()
-                                    ->placeholder('Katılmama sebebi')
-                                    ->columnSpanFull()
-                                    ->hidden(function (Get $get) {
-                                        return $get('is_participated');
-                                    }),
-                            ])
-                            ->reorderable(false)
-                            ->deletable(false)
-                            ->addable(false)
-                            ->default(User::active()->get()->map(fn (User $user) => [
-                                'name' => $user->name,
-                                'user_id' => $user->id,
-                                'is_participated' => true,
-                            ])->toArray()),
-
-                        Repeater::make('guests')
-                            ->label('Konuklar')
-                            ->schema([
-                                TextInput::make('name')
-                                    ->label('İsim')
-                                    ->required()
-                                    ->maxLength(255),
-                            ])
-                            ->addActionLabel('Konuk ekle')
-                            ->defaultItems(0),
-                    ]),
-            ]);
+        return MeetingForm::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->defaultPaginationPageOption(50)
-            ->defaultSort('date', 'desc')
-            ->columns([
-                TextColumn::make('title')
-                    ->label('Başlık')
-                    ->searchable(),
-
-                TextColumn::make('date')
-                    ->label('Tarih')
-                    ->date('d F Y')
-                    ->sortable(),
-
-                TextColumn::make('order')
-                    ->label('Sıra')
-                    ->numeric()
-                    ->sortable(),
-
-                TextColumn::make('meetable.name')
-                    ->label('Kitap/Yazar')
-                    ->sortable(),
-            ])
-            ->filters([
-                Filter::make('date_range')
-                    ->schema([
-                        DatePicker::make('from')
-                            ->label('Tarihinden'),
-                        DatePicker::make('to')
-                            ->label('Tarihine'),
-                    ])
-                    ->query(function ($query, array $data) {
-                        return $query->when($data['from'], function ($query) use ($data) {
-                            $query->whereDate('date', '>=', $data['from']);
-                        })->when($data['to'], function ($query) use ($data) {
-                            $query->whereDate('date', '<=', $data['to']);
-                        });
-                    })
-                    ->indicateUsing(function (array $data) {
-                        if (! $data['from'] && ! $data['to']) {
-                            return null;
-                        }
-
-                        return 'Tarih Aralığı: '.($data['from'] ?? '...').' - '.($data['to'] ?? '...');
-                    }),
-            ])
-            ->recordActions([
-                ActionGroup::make([
-                    ViewAction::make(),
-                    EditAction::make()
-                        ->color('warning'),
-                    DeleteAction::make(),
-                    Action::make('export')
-                        ->label('PDF\'e Aktar')
-                        ->color('info')
-                        ->icon('heroicon-o-document')
-                        ->url(fn (Meeting $record) => route('meetings.export.pdf', $record), true),
-                ]),
-            ])
-            ->toolbarActions([
-                DeleteBulkAction::make(),
-            ]);
+        return MeetingTable::configure($table);
     }
 
     public static function infolist(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                Group::make([
-                    Section::make([
-                        Group::make([
-                            TextEntry::make('order')
-                                ->size(TextSize::Large)
-                                ->weight(FontWeight::Black)
-                                ->hiddenLabel()
-                                ->formatStateUsing(fn (string $state, Meeting $record) => $state.'. '.$record->title)
-                                ->columnSpan(3),
-
-                            TextEntry::make('date')
-                                ->formatStateUsing(fn ($state) => $state->format('d/m/Y'))
-                                ->hiddenLabel()
-                                ->columnSpan(1)
-                                ->alignRight(),
-
-                            TextEntry::make('location')
-                                ->label('Mekân: ')
-                                ->inlineLabel(),
-
-                            TextEntry::make('abstainedUsers')
-                                ->label('Katılmayanlar')
-                                ->listWithLineBreaks()
-                                ->bulleted()
-                                ->formatStateUsing(fn ($state) => $state->name.' ('.$state->pivot->reason_for_not_participating.')')
-                                ->columnSpanFull(),
-
-                            TextEntry::make('guests')
-                                ->label('Misafirler')
-                                ->listWithLineBreaks()
-                                ->bulleted()
-                                ->columnSpanFull()
-                                ->formatStateUsing(fn (array $state) => implode(', ', $state))
-                                ->visible(fn (Meeting $record) => $record->guests),
-
-                            TextEntry::make('topics')
-                                ->label('Gündem Maddeleri')
-                                ->html()
-                                ->columnSpanFull()
-                                ->visible(fn (Meeting $record) => $record->topics),
-
-                            TextEntry::make('decisions')
-                                ->label('Kararlar')
-                                ->html()
-                                ->columnSpanFull()
-                                ->visible(fn (Meeting $record) => $record->decisions),
-                        ])
-                            ->columns(4),
-                    ])
-                        ->heading('Toplantı Bilgileri'),
-                ])
-                    ->columnSpan(2),
-
-                Group::make([
-                    Section::make([
-                        ImageEntry::make('meetable.image')
-                            ->hiddenLabel(),
-
-                        TextEntry::make('meetable.name')
-                            ->hiddenLabel(),
-
-                        TextEntry::make('meetable.writer.name')
-                            ->visible(fn ($record) => $record->meetable_type === Book::class)
-                            ->hiddenLabel(),
-
-                        TextEntry::make('meetable.publisher.name')
-                            ->visible(fn ($record) => $record->meetable_type === Book::class)
-                            ->hiddenLabel(),
-
-                    ])
-                        ->columnSpanFull()
-                        ->heading('Kitap/Yazar Bilgileri'),
-                ])
-                    ->columnSpan(1),
-            ])
-            ->columns(3);
+        return MeetingInfolist::configure($schema);
     }
 
     public static function getRelations(): array
