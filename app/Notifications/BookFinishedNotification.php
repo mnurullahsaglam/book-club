@@ -2,7 +2,7 @@
 
 namespace App\Notifications;
 
-use App\Filament\Resources\ReviewResource;
+use App\Filament\Resources\Reviews\ReviewResource;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;

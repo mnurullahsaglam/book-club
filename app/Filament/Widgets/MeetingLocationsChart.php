@@ -7,11 +7,11 @@ use Filament\Widgets\ChartWidget;
 
 class MeetingLocationsChart extends ChartWidget
 {
-    protected static ?string $heading = 'Mekânlar';
+    protected ?string $heading = 'Mekânlar';
 
     protected static ?int $sort = 2;
 
-    protected static ?string $pollingInterval = null;
+    protected ?string $pollingInterval = null;
 
     public function getDescription(): ?string
     {

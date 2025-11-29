@@ -8,11 +8,11 @@ use Filament\Widgets\ChartWidget;
 
 class MeetingParticipantsChart extends ChartWidget
 {
-    protected static ?string $heading = 'Katılım Durumu';
+    protected ?string $heading = 'Katılım Durumu';
 
     protected static ?int $sort = 3;
 
-    protected static ?string $pollingInterval = null;
+    protected ?string $pollingInterval = null;
 
     public function getDescription(): ?string
     {

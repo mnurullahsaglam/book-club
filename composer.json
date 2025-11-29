@@ -10,17 +10,18 @@
     "require": {
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^3.0",
-        "filament/filament": "^3.3",
-        "filipfonal/filament-log-manager": "^2.1",
+        "filament/filament": "^4.0",
+        "filipfonal/filament-log-manager": "^3.0",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^12.8.1",
         "laravel/nightwatch": "^1.7",
         "laravel/tinker": "^2.8",
-        "mokhosh/filament-rating": "^1.4"
+        "mokhosh/filament-rating": "^2.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.15",
         "fakerphp/faker": "^1.9.1",
+        "filament/upgrade": "^4.0",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",
         "mockery/mockery": "^1.4.4",

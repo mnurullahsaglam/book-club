@@ -6,7 +6,7 @@ use Filament\Widgets\Widget;
 
 class VersionNotes extends Widget
 {
-    protected static string $view = 'filament.widgets.version-notes';
+    protected string $view = 'filament.widgets.version-notes';
 
     protected static ?int $sort = 4;
 

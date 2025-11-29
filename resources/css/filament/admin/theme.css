@@ -1,7 +1,5 @@
 @import '../../../../vendor/filament/filament/resources/css/theme.css';
 
-@config './tailwind.config.js';
-
 .progress-bar {
     @apply h-4 w-full bg-gray-100 dark:bg-gray-800 rounded-full shadow-inner overflow-hidden
 }
