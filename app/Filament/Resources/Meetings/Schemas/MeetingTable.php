@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Meetings\Schemas;
 
+use App\Models\Meeting;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteAction;
@@ -12,7 +13,6 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
-use App\Models\Meeting;
 
 class MeetingTable
 {
@@ -81,4 +81,3 @@ class MeetingTable
             ]);
     }
 }
-

@@ -2,14 +2,14 @@
 
 namespace App\Filament\Resources\Books\Schemas;
 
+use App\Filament\Exports\BookExporter;
 use App\Models\Book;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ExportBulkAction;
-use Filament\Actions\ViewAction;
-use App\Filament\Exports\BookExporter;
 use Filament\Actions\Exports\Models\Export;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
@@ -66,4 +66,3 @@ class BookTable
             ]);
     }
 }
-

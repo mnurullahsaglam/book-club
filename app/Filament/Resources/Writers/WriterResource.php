@@ -16,7 +16,7 @@ class WriterResource extends Resource
 {
     protected static ?string $model = Writer::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user';
 
     protected static ?string $slug = 'writers';
 

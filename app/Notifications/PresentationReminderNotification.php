@@ -29,11 +29,11 @@ class PresentationReminderNotification extends Notification implements ShouldQue
         $daysText = $this->daysUntil === 1 ? '1 gün' : "{$this->daysUntil} gün";
         $presentationCount = $this->presentations->count();
         $presentationText = $presentationCount === 1 ? 'sunum' : 'sunumlar';
-        
+
         $mailMessage = (new MailMessage)
             ->subject("Sunum Hatırlatıcısı - {$daysText} kaldı")
-            ->greeting('Merhaba ' . $notifiable->name . '!')
-            ->line("Yaklaşan bir toplantı için sunum hatırlatması:")
+            ->greeting('Merhaba '.$notifiable->name.'!')
+            ->line('Yaklaşan bir toplantı için sunum hatırlatması:')
             ->line("**{$this->meeting->title}**")
             ->line("📅 Tarih: {$this->meeting->date->format('d F Y')}")
             ->line("📍 Mekân: {$this->meeting->location}")
@@ -42,15 +42,15 @@ class PresentationReminderNotification extends Notification implements ShouldQue
 
         foreach ($this->presentations as $presentation) {
             $mailMessage->line("• **{$presentation->title}**");
-            
+
             if ($presentation->citation) {
                 $mailMessage->line("  Künye: {$presentation->citation}");
             }
-            
+
             if ($presentation->file) {
                 $mailMessage->line("  Dosya: {$presentation->file_url}");
             }
-            
+
             $mailMessage->line('');
         }
 

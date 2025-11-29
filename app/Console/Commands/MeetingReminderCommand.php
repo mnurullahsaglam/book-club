@@ -15,7 +15,7 @@ class MeetingReminderCommand extends Command
     public function handle(): void
     {
         $today = now()->startOfDay();
-        
+
         $meetingsInThreeDays = Meeting::query()
             ->whereDate('date', $today->copy()->addDays(3))
             ->with(['presentations.user'])
@@ -31,6 +31,7 @@ class MeetingReminderCommand extends Command
         foreach ($meetingsInThreeDays as $meeting) {
             if ($meeting->presentations->isEmpty()) {
                 $this->info("No presentations found for meeting: {$meeting->title} (3 days away)");
+
                 continue;
             }
 
@@ -38,7 +39,7 @@ class MeetingReminderCommand extends Command
 
             foreach ($presentationsByUser as $userId => $presentations) {
                 $user = $presentations->first()->user;
-                
+
                 if ($user && $user->is_active) {
                     $user->notify(new PresentationReminderNotification($meeting, $presentations, 3));
                     $totalSent++;
@@ -50,6 +51,7 @@ class MeetingReminderCommand extends Command
         foreach ($meetingsInOneDay as $meeting) {
             if ($meeting->presentations->isEmpty()) {
                 $this->info("No presentations found for meeting: {$meeting->title} (1 day away)");
+
                 continue;
             }
 
@@ -57,7 +59,7 @@ class MeetingReminderCommand extends Command
 
             foreach ($presentationsByUser as $userId => $presentations) {
                 $user = $presentations->first()->user;
-                
+
                 if ($user && $user->is_active) {
                     $user->notify(new PresentationReminderNotification($meeting, $presentations, 1));
                     $totalSent++;
@@ -73,4 +75,3 @@ class MeetingReminderCommand extends Command
         }
     }
 }
-

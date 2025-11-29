@@ -15,7 +15,7 @@ class PresentationResource extends Resource
 {
     protected static ?string $model = Presentation::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-presentation-chart-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-presentation-chart-line';
 
     protected static ?string $slug = 'presentation';
 
