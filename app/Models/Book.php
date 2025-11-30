@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use Filament\Actions\Action;
 use App\Filament\Resources\Reviews\ReviewResource;
 use App\Notifications\BookFinishedNotification;
 use App\Traits\Slugger;
+use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;

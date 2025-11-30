@@ -16,7 +16,7 @@ class PublisherResource extends Resource
 {
     protected static ?string $model = Publisher::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-s-book-open';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-s-book-open';
 
     protected static ?string $slug = 'publishers';
 

@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources\Books\RelationManagers;
 
-use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Mokhosh\FilamentRating\Columns\RatingColumn;

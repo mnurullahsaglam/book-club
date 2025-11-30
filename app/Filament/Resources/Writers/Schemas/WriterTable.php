@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Writers\Schemas;
 
+use App\Filament\Exports\WriterExporter;
 use App\Models\Writer;
 use App\Notifications\WriterSummaryNotification;
 use App\Tables\Columns\ProgressColumn;
@@ -10,7 +11,6 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ExportBulkAction;
-use App\Filament\Exports\WriterExporter;
 use Filament\Actions\Exports\Models\Export;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
@@ -139,4 +139,3 @@ class WriterTable
             ]);
     }
 }
-

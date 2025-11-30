@@ -5,7 +5,6 @@ namespace App\Filament\Resources\Reviews\Schemas;
 use App\Models\User;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
@@ -81,4 +80,3 @@ class ReviewTable
             ]);
     }
 }
-

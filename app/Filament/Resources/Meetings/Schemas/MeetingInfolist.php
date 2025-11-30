@@ -96,4 +96,3 @@ class MeetingInfolist
             ->columns(3);
     }
 }
-
