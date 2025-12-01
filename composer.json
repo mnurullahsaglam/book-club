@@ -16,7 +16,8 @@
         "laravel/framework": "^12.8.1",
         "laravel/nightwatch": "^1.7",
         "laravel/tinker": "^2.8",
-        "mokhosh/filament-rating": "^2.0"
+        "mokhosh/filament-rating": "^2.0",
+        "plesk/ext-laravel-integration": "^7.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.15",
