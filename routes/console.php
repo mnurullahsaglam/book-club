@@ -20,3 +20,7 @@ Artisan::command('inspire', function () {
 
 Schedule::command('meeting:reminder')
     ->dailyAt('10:00');
+
+Schedule::command('hadith:send-daily')
+    ->dailyAt('09:00')
+    ->when(fn () => now()->between('2025-12-21', '2026-03-19'));
