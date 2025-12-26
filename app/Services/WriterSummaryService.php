@@ -10,7 +10,7 @@ class WriterSummaryService
 
     public function __construct(protected Writer $writer)
     {
-        $this->writer->loadMissing('books', 'readBooks', 'books.reviews', 'meetings', 'meetings.users', 'meetings.abstainedUsers', 'meetings.presentations');
+        $this->writer->loadMissing('books', 'readBooks', 'books.reviews', 'meetings', 'meetings.users', 'meetings.participatedUsers', 'meetings.abstainedUsers', 'meetings.presentations');
     }
 
     public function handle(): string
@@ -25,6 +25,8 @@ class WriterSummaryService
         $this->setGuestStats();
         $this->setPresentationList();
         $this->setBookList();
+        $this->setPageStats();
+        $this->setOverallRating();
 
         return $this->generateSummaryText();
     }
@@ -109,6 +111,16 @@ class WriterSummaryService
         $summaryText .= '<b>Toplam toplantı sayısı:</b> '.$this->summary['meetings_count'].'<br>';
         $summaryText .= '<b>Toplam kitap sayısı:</b> '.$this->summary['books_count'].'<br>';
 
+        if ($this->summary['total_pages'] > 0) {
+            $summaryText .= '<b>Toplam Sayfa:</b> '.$this->summary['total_pages'];
+            $summaryText .= ' (Ortalama: '.$this->summary['average_pages'].' sayfa/kitap)<br>';
+        }
+
+        if ($this->summary['overall_rating']) {
+            $summaryText .= '<b>Genel Ortalama Puan:</b> '.$this->summary['overall_rating'];
+            $summaryText .= ' ('.$this->summary['total_reviews_count'].' değerlendirme)<br>';
+        }
+
         $summaryText .= '<b>Mekanlar ('.$this->summary['locations_count'].'</b>): '.$this->summary['locations_text'].'<br>';
         $summaryText .= '<b>Misafirler ('.$this->summary['guests_count'].'</b>): '.$this->summary['guests_text'].'<br>';
         $summaryText .= '<b>Katılım Durumu:</b> '.$this->summary['abstained_users'].'<br>';
@@ -122,62 +134,75 @@ class WriterSummaryService
 
     private function setAbstainedUserStats(): void
     {
-        $participationData = [];
+        $totalMeetings = $this->writer->allRelatedMeetings()->count();
+        $userParticipation = [];
 
+        // Count participation and absences for each user
         foreach ($this->writer->allRelatedMeetings() as $meeting) {
-            foreach ($meeting->abstainedUsers as $user) {
-                if (! isset($participationData[$user->id])) {
-                    $participationData[$user->id] = [
+            // Track all users involved in this meeting
+            foreach ($meeting->users as $user) {
+                if (!isset($userParticipation[$user->id])) {
+                    $userParticipation[$user->id] = [
                         'name' => $user->name,
-                        'absence_count' => 0,
-                        'reasons' => collect(),
+                        'total_meetings' => 0,
+                        'participated' => 0,
+                        'absent' => 0,
+                        'absence_reasons' => collect(),
                     ];
                 }
+                $userParticipation[$user->id]['total_meetings'] += 1;
+            }
 
-                $participationData[$user->id]['absence_count'] += 1;
+            // Track who participated
+            foreach ($meeting->participatedUsers as $user) {
+                if (isset($userParticipation[$user->id])) {
+                    $userParticipation[$user->id]['participated'] += 1;
+                }
+            }
 
-                $reasons = $user->pivot->reason_for_not_participating
-                    ? collect(explode(',', $user->pivot->reason_for_not_participating))->map(fn ($r) => trim($r))->unique()
-                    : collect();
+            // Track absences with reasons
+            foreach ($meeting->abstainedUsers as $user) {
+                if (isset($userParticipation[$user->id])) {
+                    $userParticipation[$user->id]['absent'] += 1;
 
-                $participationData[$user->id]['reasons'] = $participationData[$user->id]['reasons']->merge($reasons)->unique();
+                    $reasons = $user->pivot->reason_for_not_participating
+                        ? collect(explode(',', $user->pivot->reason_for_not_participating))->map(fn ($r) => trim($r))
+                        : collect();
+
+                    $userParticipation[$user->id]['absence_reasons'] = $userParticipation[$user->id]['absence_reasons']->merge($reasons);
+                }
             }
         }
 
-        $allUsers = $this->writer->allRelatedMeetings()->flatMap(function ($meeting) {
-            return $meeting->users;
-        })->unique('id');
+        $participationTexts = collect();
 
-        $fullParticipants = collect();
-        $abstainers = collect();
+        foreach ($userParticipation as $userData) {
+            $name = $userData['name'];
+            $userMeetings = $userData['total_meetings'];
+            $participated = $userData['participated'];
+            $absent = $userData['absent'];
 
-        foreach ($allUsers as $user) {
-            if (isset($participationData[$user->id])) {
-                $absenceCount = $participationData[$user->id]['absence_count'];
-                $reasons = $participationData[$user->id]['reasons']->implode(', ');
-                $abstainers->push([
-                    'name' => $user->name,
-                    'text' => "{$user->name}; {$reasons} dolayısıyla toplam {$absenceCount} defa",
-                ]);
-            } else {
-                $fullParticipants->push($user->name);
+            $text = "{$name} {$userMeetings} toplantının {$participated} tanesine katıldı.";
+
+            if ($absent > 0) {
+                // Group absence reasons by reason and count
+                $reasonCounts = $userData['absence_reasons']
+                    ->countBy()
+                    ->sortDesc();
+
+                if ($reasonCounts->isNotEmpty()) {
+                    $reasonTexts = $reasonCounts->map(function ($count, $reason) {
+                        return "{$count} defa {$reason} sebebiyle";
+                    })->values();
+
+                    $text .= ' ' . $reasonTexts->implode(', ') . ' toplantılara katılamadı.';
+                }
             }
+
+            $participationTexts->push($text);
         }
 
-        $fullParticipants = $fullParticipants->sort()->values();
-        $abstainers = $abstainers->sortBy('name')->pluck('text');
-
-        $abstainedText = '';
-
-        if ($fullParticipants->isNotEmpty()) {
-            $abstainedText .= $fullParticipants->implode(', ').' tüm toplantılara katılım sağladı. ';
-        }
-
-        if ($abstainers->isNotEmpty()) {
-            $abstainedText .= $abstainers->implode(', ').' katılım gösteremedi.';
-        }
-
-        $this->summary['abstained_users'] = $abstainedText;
+        $this->summary['abstained_users'] = $participationTexts->sortBy(fn($text) => $text)->implode(' ');
     }
 
     private function setPresentationList(): void
@@ -205,24 +230,57 @@ class WriterSummaryService
 
     private function setBookList(): void
     {
-        $bookList = $this->writer->books->flatMap(function ($book) {
-            return collect([$book])
-                ->map(function ($book) {
-                    $item = '- '.$book->name;
+        $booksWithRatings = $this->writer->books->map(function ($book) {
+            $reviewCount = $book->reviews->filter(fn($r) => $r->rating !== null)->count();
+            $averageRating = $reviewCount > 0 ? round($book->reviews->avg('rating'), 1) : null;
 
-                    $reviewCount = $book->reviews->count();
+            return [
+                'book' => $book,
+                'rating' => $averageRating,
+                'review_count' => $reviewCount,
+            ];
+        })->sortByDesc(function ($item) {
+            // Sort by rating (nulls last), then by name
+            return $item['rating'] ?? -1;
+        });
 
-                    if ($reviewCount > 0) {
-                        $averageRating = round($book->reviews->avg('rating'), 1);
-                        $item .= " ({$averageRating} puan/{$reviewCount} değerlendirme)";
-                    } else {
-                        $item .= ' (Değerlendirilmemiş)';
-                    }
+        $bookList = $booksWithRatings->map(function ($item) {
+            $book = $item['book'];
+            $text = '- '.$book->name;
 
-                    return $item;
-                });
+            if ($item['rating'] !== null) {
+                $text .= " ({$item['rating']} puan/{$item['review_count']} değerlendirme)";
+            } else {
+                $text .= ' (Değerlendirilmemiş)';
+            }
+
+            return $text;
         });
 
         $this->summary['book_list'] = $bookList;
+    }
+
+    private function setPageStats(): void
+    {
+        $books = $this->writer->books->filter(fn($book) => $book->page_count);
+        
+        $this->summary['total_pages'] = $books->sum('page_count');
+        $this->summary['average_pages'] = $books->isNotEmpty() 
+            ? round($books->avg('page_count'))
+            : 0;
+    }
+
+    private function setOverallRating(): void
+    {
+        $allReviews = $this->writer->books->flatMap(fn($book) => $book->reviews);
+        $reviewsWithRating = $allReviews->filter(fn($review) => $review->rating !== null);
+        
+        if ($reviewsWithRating->isNotEmpty()) {
+            $this->summary['overall_rating'] = round($reviewsWithRating->avg('rating'), 1);
+            $this->summary['total_reviews_count'] = $reviewsWithRating->count();
+        } else {
+            $this->summary['overall_rating'] = null;
+            $this->summary['total_reviews_count'] = 0;
+        }
     }
 }
