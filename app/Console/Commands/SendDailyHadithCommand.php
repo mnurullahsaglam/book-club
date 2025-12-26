@@ -65,4 +65,3 @@ class SendDailyHadithCommand extends Command
         return $hadiths[array_rand($hadiths)];
     }
 }
-
