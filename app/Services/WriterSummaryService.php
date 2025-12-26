@@ -141,7 +141,7 @@ class WriterSummaryService
         foreach ($this->writer->allRelatedMeetings() as $meeting) {
             // Track all users involved in this meeting
             foreach ($meeting->users as $user) {
-                if (!isset($userParticipation[$user->id])) {
+                if (! isset($userParticipation[$user->id])) {
                     $userParticipation[$user->id] = [
                         'name' => $user->name,
                         'total_meetings' => 0,
@@ -195,14 +195,14 @@ class WriterSummaryService
                         return "{$count} defa {$reason} sebebiyle";
                     })->values();
 
-                    $text .= ' ' . $reasonTexts->implode(', ') . ' toplantılara katılamadı.';
+                    $text .= ' '.$reasonTexts->implode(', ').' toplantılara katılamadı.';
                 }
             }
 
             $participationTexts->push($text);
         }
 
-        $this->summary['abstained_users'] = $participationTexts->sortBy(fn($text) => $text)->implode(' ');
+        $this->summary['abstained_users'] = $participationTexts->sortBy(fn ($text) => $text)->implode(' ');
     }
 
     private function setPresentationList(): void
@@ -231,7 +231,7 @@ class WriterSummaryService
     private function setBookList(): void
     {
         $booksWithRatings = $this->writer->books->map(function ($book) {
-            $reviewCount = $book->reviews->filter(fn($r) => $r->rating !== null)->count();
+            $reviewCount = $book->reviews->filter(fn ($r) => $r->rating !== null)->count();
             $averageRating = $reviewCount > 0 ? round($book->reviews->avg('rating'), 1) : null;
 
             return [
@@ -262,19 +262,19 @@ class WriterSummaryService
 
     private function setPageStats(): void
     {
-        $books = $this->writer->books->filter(fn($book) => $book->page_count);
-        
+        $books = $this->writer->books->filter(fn ($book) => $book->page_count);
+
         $this->summary['total_pages'] = $books->sum('page_count');
-        $this->summary['average_pages'] = $books->isNotEmpty() 
+        $this->summary['average_pages'] = $books->isNotEmpty()
             ? round($books->avg('page_count'))
             : 0;
     }
 
     private function setOverallRating(): void
     {
-        $allReviews = $this->writer->books->flatMap(fn($book) => $book->reviews);
-        $reviewsWithRating = $allReviews->filter(fn($review) => $review->rating !== null);
-        
+        $allReviews = $this->writer->books->flatMap(fn ($book) => $book->reviews);
+        $reviewsWithRating = $allReviews->filter(fn ($review) => $review->rating !== null);
+
         if ($reviewsWithRating->isNotEmpty()) {
             $this->summary['overall_rating'] = round($reviewsWithRating->avg('rating'), 1);
             $this->summary['total_reviews_count'] = $reviewsWithRating->count();
