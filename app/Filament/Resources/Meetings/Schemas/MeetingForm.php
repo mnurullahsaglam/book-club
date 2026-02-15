@@ -45,7 +45,7 @@ class MeetingForm
                     ->preload()
                     ->live()
                     ->afterStateUpdated(function (Set $set, Get $get, ?array $state, ?Meeting $record) {
-                        if (!is_array($state) || !isset($state['meetable_id'])) {
+                        if (! is_array($state) || ! isset($state['meetable_id'])) {
                             $set('order', 1);
 
                             return;
