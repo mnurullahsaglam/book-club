@@ -44,32 +44,28 @@ class MeetingForm
                     ->searchable()
                     ->preload()
                     ->live()
-                    ->afterStateUpdated(function (Set $set, ?array $state, ?Meeting $record) {
-                        if (is_array($state) && isset($state['meetable_id'])) {
-                            $writerId = $state['meetable_id'];
-
-                            if ($state['meetable_type'] === Book::class) {
-                                $writerId = Book::find($state['meetable_id'])->writer_id;
-                            }
-
-                            $meetingCount = Meeting::whereHasMorph(
-                                'meetable',
-                                [Book::class, Writer::class],
-                                function (Builder $query, string $type) use ($writerId) {
-                                    $column = $type === Book::class ? 'writer_id' : 'id';
-
-                                    $query->where($column, $writerId);
-                                }
-                            )
-                                ->when($record, function (Builder $query) use ($record) {
-                                    $query->where('id', '!=', $record->id);
-                                })
-                                ->count();
-
-                            $set('order', $meetingCount + 1);
-                        } else {
+                    ->afterStateUpdated(function (Set $set, Get $get, ?array $state, ?Meeting $record) {
+                        if (!is_array($state) || !isset($state['meetable_id'])) {
                             $set('order', 1);
+
+                            return;
                         }
+
+                        $newWriterId = self::resolveWriterId($state['meetable_type'], $state['meetable_id']);
+
+                        if ($record) {
+                            $oldWriterId = self::resolveWriterId($record->meetable_type, $record->meetable_id);
+
+                            if ($oldWriterId === $newWriterId) {
+                                $set('order', $record->order);
+
+                                return;
+                            }
+                        }
+
+                        $date = $get('date') ?? now()->toDateString();
+
+                        $set('order', self::calculateOrder($newWriterId, $date, $record));
                     })
                     ->required(),
 
@@ -93,7 +89,25 @@ class MeetingForm
                 DatePicker::make('date')
                     ->label('Tarih')
                     ->default(now())
-                    ->required(),
+                    ->required()
+                    ->live()
+                    ->afterStateUpdated(function (Set $set, Get $get, ?string $state, ?Meeting $record) {
+                        if (! $state) {
+                            return;
+                        }
+
+                        $meetable = $get('meetable');
+
+                        if (is_array($meetable) && isset($meetable['meetable_id'])) {
+                            $writerId = self::resolveWriterId($meetable['meetable_type'], $meetable['meetable_id']);
+                        } elseif ($record) {
+                            $writerId = self::resolveWriterId($record->meetable_type, $record->meetable_id);
+                        } else {
+                            return;
+                        }
+
+                        $set('order', self::calculateOrder($writerId, $state, $record));
+                    }),
 
                 Section::make('Gündem Maddeleri ve Kararlar')
                     ->schema([
@@ -150,5 +164,29 @@ class MeetingForm
                             ->defaultItems(0),
                     ]),
             ]);
+    }
+
+    private static function resolveWriterId(string $meetableType, int|string $meetableId): int
+    {
+        if ($meetableType === Book::class) {
+            return Book::find($meetableId)->writer_id;
+        }
+
+        return (int) $meetableId;
+    }
+
+    private static function calculateOrder(int $writerId, string $date, ?Meeting $record = null): int
+    {
+        return Meeting::whereHasMorph(
+            'meetable',
+            [Book::class, Writer::class],
+            function (Builder $query, string $type) use ($writerId) {
+                $column = $type === Book::class ? 'writer_id' : 'id';
+                $query->where($column, $writerId);
+            }
+        )
+            ->when($record, fn (Builder $query) => $query->where('id', '!=', $record->id))
+            ->where('date', '<=', $date)
+            ->count() + 1;
     }
 }
